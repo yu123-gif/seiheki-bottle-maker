@@ -1,0 +1,15 @@
+GitHub Pages公開メモ
+
+推奨リポジトリ名:
+seiheki-bottle-maker
+
+公開URL例:
+https://あなたのGitHubユーザー名.github.io/seiheki-bottle-maker/
+
+LINEで送る文例:
+これ試してみて
+https://あなたのGitHubユーザー名.github.io/seiheki-bottle-maker/
+
+注意:
+リポジトリをPrivateにすると、プランや設定によってPages公開が制限される場合があります。
+まずはPublicリポジトリで作るのが簡単です。

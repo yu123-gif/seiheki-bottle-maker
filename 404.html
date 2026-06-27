@@ -1,0 +1,839 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>性癖の瓶メーカー｜GitHub Pages版</title>
+  <meta name="description" content="赤い瓶・青い瓶で性癖傾向を診断するWebアプリ。タップだけで入力できます。">
+  <meta name="theme-color" content="#e85b9e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="性癖の瓶">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta property="og:title" content="性癖の瓶メーカー">
+  <meta property="og:description" content="赤い瓶・青い瓶であなたの傾向を分析します。">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <style>
+    :root{
+      --bg:#fff7fb;
+      --panel:#ffffff;
+      --text:#261d24;
+      --muted:#746873;
+      --border:#ead4df;
+      --accent:#e85b9e;
+      --accent2:#fff0f7;
+      --blue:#3b82f6;
+      --yellow:#facc15;
+      --red:#ef4444;
+      --locked:#9ca3af;
+      --shadow:0 10px 28px rgba(232,91,158,.14);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:radial-gradient(circle at top,#ffe2f0 0,var(--bg) 340px);
+      color:var(--text);
+      line-height:1.55;
+    }
+    main{width:min(1180px,calc(100% - 24px));margin:auto;padding:20px 0 46px}
+    h1{font-size:clamp(1.8rem,5vw,3.1rem);line-height:1.15;margin:0}
+    h2{font-size:1.06rem;margin:0 0 10px}
+    .sub{color:var(--muted);margin:.35rem 0 0}
+    .panel,.metric,.result-box{
+      background:rgba(255,255,255,.92);
+      border:1px solid var(--border);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+    }
+    .panel{padding:15px;margin:14px 0}
+    .notice{border-left:5px solid var(--accent);background:linear-gradient(90deg,#fff,var(--accent2))}
+    .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+    button,select{
+      font:inherit;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#fff;
+      color:var(--text);
+      padding:9px 12px;
+    }
+    button{cursor:pointer}
+    button:hover:not(:disabled),select:hover{border-color:var(--accent)}
+    button:disabled{cursor:not-allowed;opacity:.7}
+    .primary{background:var(--accent);color:white;border-color:var(--accent);font-weight:700}
+    .legend{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+    .legend div{border:1px solid var(--border);border-radius:12px;padding:8px 10px;font-weight:700}
+    .l-blue{background:#dbeafe}
+    .l-yellow{background:#fef3c7}
+    .l-red{background:#fee2e2}
+    .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+    .metric{padding:13px}
+    .metric-label{font-size:.84rem;color:var(--muted)}
+    .metric-value{font-size:1.45rem;font-weight:800;line-height:1.15;margin-top:2px}
+    .metric-hint{font-size:.82rem;color:var(--muted);margin-top:4px}
+    .group{margin:24px 0}
+    .group-title{display:flex;align-items:center;gap:7px;font-weight:800}
+    .heart{color:var(--accent)}
+    .grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+    .bottle-card{
+      min-height:137px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:white;
+      padding:7px;
+      transition:.12s transform,.12s box-shadow,.12s border-color,.12s background;
+    }
+    .bottle-card:hover{transform:translateY(-1px);border-color:var(--accent);box-shadow:0 8px 20px rgba(232,91,158,.12)}
+    .tone-empty{background:#fff}
+    .tone-blue{background:#dbeafe}
+    .tone-yellow{background:#fef3c7}
+    .tone-red{background:#fee2e2}
+    .tone-locked{background:#f3f4f6;opacity:.72}
+    .bottle-btn{
+      width:100%;
+      min-height:121px;
+      padding:0;
+      border:0;
+      background:transparent;
+      display:grid;
+      place-items:center;
+      gap:2px;
+      color:var(--text);
+      user-select:none;
+      -webkit-user-select:none;
+      -webkit-touch-callout:none;
+      touch-action:none;
+    }
+    .bottle-btn:focus-visible{outline:3px solid var(--accent);outline-offset:4px;border-radius:12px}
+    .holding{outline:3px solid var(--accent);outline-offset:4px;border-radius:12px}
+    .bottle-svg{width:60px;height:76px;display:block}
+    .bottle-name{
+      font-size:.86rem;
+      font-weight:800;
+      line-height:1.2;
+      text-align:center;
+      overflow-wrap:anywhere;
+    }
+    .bottle-score{font-size:.74rem;color:var(--muted);line-height:1.2;text-align:center}
+    .result-box{padding:15px;margin-top:24px}
+    .badge{display:inline-flex;border:1px solid #f2bad4;background:#fff0f7;color:#8a2d5d;border-radius:999px;padding:4px 10px;font-weight:800}
+    .bars{display:grid;gap:10px;margin-top:14px}
+    .bar-head{display:flex;justify-content:space-between;gap:10px;font-size:.88rem;margin-bottom:4px}
+    .bar-track{height:10px;border-radius:999px;background:#f3e5ed;overflow:hidden}
+    .bar-fill{height:100%;width:0%;border-radius:999px;transition:width .2s}
+    textarea{
+      width:100%;
+      min-height:110px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:10px;
+      font:inherit;
+      resize:vertical;
+      background:#fff;
+    }
+    .small{font-size:.86rem;color:var(--muted)}
+    .gate{
+      position:fixed;
+      inset:0;
+      z-index:20;
+      background:rgba(255,247,251,.96);
+      display:grid;
+      place-items:center;
+      padding:18px;
+    }
+    .gate-card{
+      width:min(520px,100%);
+      background:white;
+      border:1px solid var(--border);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+    .hidden{display:none!important}
+
+    /* Screenshot board */
+    .screen-panel{margin-top:18px}
+    .screenshot-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px}
+    .poster-wrap{
+      overflow:auto;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:#fff;
+      padding:12px;
+      box-shadow:var(--shadow);
+    }
+    .poster{
+      width:1120px;
+      min-height:760px;
+      background:#fff;
+      color:#111;
+      padding:20px 18px 24px;
+      border-radius:12px;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    .poster-header{
+      display:flex;
+      justify-content:space-between;
+      gap:18px;
+      align-items:flex-start;
+      margin-bottom:14px;
+    }
+    .poster-title{font-size:34px;font-weight:900;letter-spacing:.02em;line-height:1.15}
+    .poster-sub{font-size:14px;color:#555;margin-top:5px}
+    .poster-legend{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:4px 16px;
+      font-size:18px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .legend-red{color:#ef4444}
+    .legend-blue{color:#2563eb}
+    .legend-yellow{color:#ca8a04}
+    .legend-gray{color:#6b7280}
+    .poster-type{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      margin:6px 0 14px;
+      padding:8px 10px;
+      border:2px solid #f2bad4;
+      background:#fff0f7;
+      border-radius:12px;
+      font-size:16px;
+      font-weight:800;
+    }
+    .poster-grid{
+      display:grid;
+      grid-template-columns:repeat(11,1fr);
+      gap:8px;
+      align-items:start;
+    }
+    .poster-col{display:grid;gap:5px}
+    .poster-cat{
+      height:38px;
+      border:2px solid #f4b6d2;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      font-size:13px;
+      font-weight:900;
+      line-height:1.1;
+      color:#111;
+      background:#fff7fb;
+      text-align:center;
+      padding:2px;
+    }
+    .poster-cat::before{content:"♡";color:#e85b9e;margin-right:2px}
+    .mini-bottle{
+      height:52px;
+      border:2px solid #222;
+      border-radius:11px 11px 13px 13px;
+      position:relative;
+      overflow:hidden;
+      display:grid;
+      place-items:center;
+      padding:3px;
+      background:#fff;
+    }
+    .mini-bottle::before{
+      content:"";
+      position:absolute;
+      top:-5px;
+      left:50%;
+      transform:translateX(-50%);
+      width:42%;
+      height:11px;
+      border:2px solid #222;
+      border-bottom:0;
+      border-radius:7px 7px 0 0;
+      background:#fff;
+      z-index:2;
+    }
+    .mini-fill{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      height:0%;
+      opacity:.82;
+    }
+    .mini-label{
+      position:relative;
+      z-index:3;
+      text-align:center;
+      font-size:11px;
+      line-height:1.05;
+      font-weight:900;
+      word-break:keep-all;
+      overflow-wrap:anywhere;
+      text-shadow:0 1px 0 rgba(255,255,255,.85),1px 0 0 rgba(255,255,255,.75),-1px 0 0 rgba(255,255,255,.75);
+    }
+    .poster-foot{
+      margin-top:12px;
+      font-size:12px;
+      color:#666;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+    }
+    .poster-only .main-app{display:none}
+    .poster-only .screen-panel{margin-top:0}
+    .poster-only main{width:100%;padding:0}
+    .poster-only .poster-wrap{border:0;border-radius:0;box-shadow:none;padding:0;overflow:visible}
+    .poster-only .poster{border-radius:0;width:1120px;min-height:760px}
+    .poster-only .screenshot-tools{padding:10px;background:#fff;position:sticky;top:0;z-index:10;border-bottom:1px solid var(--border)}
+    @media(max-width:960px){
+      .grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+      .metrics{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:620px){
+      main{width:min(100% - 16px,1180px);padding-top:12px}
+      .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+      .bottle-card{min-height:126px;padding:5px;border-radius:14px}
+      .bottle-btn{min-height:116px}
+      .bottle-svg{width:50px;height:64px}
+      .bottle-name{font-size:.76rem}
+      .bottle-score{font-size:.66rem}
+      .legend{grid-template-columns:1fr}
+      .metrics{grid-template-columns:1fr 1fr}
+    }
+    @media print{
+      body{background:#fff}
+      .main-app,.screenshot-tools,.gate{display:none!important}
+      main{width:100%;padding:0}
+      .screen-panel{display:block!important;margin:0}
+      .poster-wrap{overflow:visible;border:0;box-shadow:none;padding:0}
+      .poster{width:1120px;border-radius:0}
+    }
+  </style>
+</head>
+<body>
+  <div id="gate" class="gate">
+    <section class="gate-card">
+      <h1>性癖の瓶メーカー</h1>
+      <p class="sub">〜あなたの中の赤い瓶、青い瓶を分析します〜</p>
+      <p>この診断は18歳以上向けの娯楽用です。成人同士の同意・安全・合法を前提にしています。</p>
+      <p class="small">危険・違法・非同意につながる項目は除外済みです。</p>
+      <button id="startBtn" class="primary" type="button">18歳以上・同意して開始</button>
+    </section>
+  </div>
+
+  <main>
+    <div class="main-app">
+      <header>
+        <h1>性癖の瓶メーカー</h1>
+        <p class="sub">〜あなたの中の赤い瓶、青い瓶を分析します〜</p>
+      </header>
+
+      <section class="panel notice">
+        <strong>分析対象外の項目を外した単体HTML版です。このファイルを開くだけで使えます。</strong>
+        <p class="small">スマホでは、このHTMLファイルをブラウザで開いて使ってください。入力後に「スクショ用ボードを表示」を押すと、見本のように全瓶をまとめた画像風レイアウトで表示できます。</p>
+        <div class="legend">
+          <div class="l-blue">青：できない</div>
+          <div class="l-yellow">黄：妄想ならあり</div>
+          <div class="l-red">赤：興奮する</div>
+        </div>
+        <div class="controls">
+          <select id="filter" aria-label="カテゴリ選択">
+            <option value="all">全項目</option>
+          </select>
+          <button id="resetBtn" type="button">リセット</button>
+          <button id="shareBtn" type="button">結果文を作成</button>
+          <button id="showPosterBtn" class="primary" type="button">スクショ用ボードを表示</button>
+        </div>
+        <p id="noticeText" class="small" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="metrics" aria-live="polite">
+        <div class="metric">
+          <div class="metric-label">総合タイプ</div>
+          <div id="typeName" class="metric-value">未診断</div>
+          <div id="typeHint" class="metric-hint">瓶を選んでください</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">赤い瓶</div>
+          <div id="redCount" class="metric-value">0</div>
+          <div class="metric-hint">興奮する</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">青い瓶</div>
+          <div id="blueCount" class="metric-value">0</div>
+          <div class="metric-hint">できない</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">総瓶数</div>
+          <div id="totalCount" class="metric-value">105</div>
+          <div id="doneCount" class="metric-hint">入力済み 0</div>
+        </div>
+      </section>
+
+      <section id="groupArea"></section>
+
+      <section class="result-box">
+        <h2>分析結果</h2>
+        <div id="resultText">まだ瓶が選ばれていません。</div>
+        <div id="categoryBars" class="bars"></div>
+        <h2 style="margin-top:18px">X用コピペ結果</h2>
+        <textarea id="shareText" readonly>結果文を作成するとここに表示されます。</textarea>
+      </section>
+    </div>
+
+    <section id="screenPanel" class="screen-panel hidden">
+      <div class="screenshot-tools">
+        <button id="backBtn" type="button">通常画面に戻る</button>
+        <button id="posterOnlyBtn" type="button">スクショ専用表示</button>
+        <button id="printBtn" type="button">印刷 / PDF保存</button>
+        <span class="small">横長なので、PCならこのボード部分をそのままスクショできます。</span>
+      </div>
+      <div class="poster-wrap">
+        <div id="poster" class="poster"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const groups = [
+      {cat:'最下層マン',items:['奴隷','謝罪','足で踏まれる','身の回りの世話','服装の差','土下座','アナル、金玉舐め','重りをもって同じ姿勢','人間家具','荷物持ち','最下層奉仕']},
+      {cat:'被虐マン',items:['アナル開発','タトゥー・ピアス','匂いザーメン中毒','貢ぎ','晒し','風俗堕ち','孕ませ','借金']},
+      {cat:'オナホマン',items:['即ハメ','悪癖','口枷','貸し出し','呼び出し','生ハメ','ザーメンタンク','飲尿','浴尿','くい打ちピストン','男尊女卑']},
+      {cat:'表露マン',items:['身体検査','罰ゲーム','淫語強制','全頭マスク','下品なポーズ','鼻フック','アヘオホ','立小便','性的いじめ','変態芸','宴会芸']},
+      {cat:'管理マン',items:['絶頂管理','行動報告','下着管理','会話チェック','睡眠管理','服装管理','食事管理','排泄管理','髪型管理','金銭管理']},
+      {cat:'ガチボコマン',items:['腹パン','噛み跡','はたく','蹴り','あざ']},
+      {cat:'主従マン',items:['足かせ','お仕置き','犬扱い','帰宅後即奉仕','首輪（椅子に固定）','全身リップ','全裸飼育','檻','外の世界と隔離']},
+      {cat:'首輪マン',items:['あまあま','言葉責め','首輪（リード）','ご奉仕','おもちゃ責め','焦らし','寸止め','首絞め','しつけ','拘束','束縛']},
+      {cat:'フェチマン',items:['複数','コスプレ','落書き','パイパン','催眠','緊縛','体液','女体盛','母乳','イメプ','スカトロ']},
+      {cat:'露出マン',items:['ネカフェでのプレイ','車中プレイ','遠隔ローター','ノーパンノーブラ','羞恥お使い','公衆での羞恥会話','露出度の高い衣装']},
+      {cat:'背徳愛マン',items:['寝取られ','浮気SEX','叱られながら責められる','彼氏よりでかちんに責められる','彼氏の悪口','電話しながらH','自宅でH','SEX懇願','はめ撮り','彼氏とSEX禁止','不倫']}
+    ];
+
+    const locked = new Set([]);
+
+    const state = {};
+    let filter = 'all';
+    let activeKey = '';
+    let startAt = 0;
+    let wasLong = false;
+    let timer = 0;
+
+    const groupArea = document.getElementById('groupArea');
+    const filterSelect = document.getElementById('filter');
+    const noticeText = document.getElementById('noticeText');
+
+    groups.forEach(group => {
+      group.items.forEach(item => state[keyOf(group.cat,item)] = 0);
+      const opt = document.createElement('option');
+      opt.value = group.cat;
+      opt.textContent = group.cat;
+      filterSelect.appendChild(opt);
+    });
+
+    function keyOf(cat,item){ return cat + '|' + item; }
+    function itemFromKey(key){ return key.split('|').slice(1).join('|'); }
+
+    function escapeHtml(value){
+      return String(value)
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;');
+    }
+
+    function color(score){
+      if(score >= 76) return 'var(--red)';
+      if(score >= 26) return 'var(--yellow)';
+      if(score > 0) return 'var(--blue)';
+      return 'var(--locked)';
+    }
+
+    function posterColor(score,item){
+      if(locked.has(item)) return '#9ca3af';
+      if(score >= 76) return '#ef4444';
+      if(score >= 26) return '#facc15';
+      if(score > 0) return '#3b82f6';
+      return 'transparent';
+    }
+
+    function fillHeight(score,item){
+      if(locked.has(item)) return 28;
+      if(score === 0) return 0;
+      if(score <= 25) return 38;
+      if(score <= 75) return 64;
+      return 92;
+    }
+
+    function tone(score,item){
+      if(locked.has(item)) return 'tone-locked';
+      if(score >= 76) return 'tone-red';
+      if(score >= 26) return 'tone-yellow';
+      if(score > 0) return 'tone-blue';
+      return 'tone-empty';
+    }
+
+    function label(score,item){
+      if(locked.has(item)) return '🔒 分析外';
+      if(score === 0) return '未入力';
+      if(score <= 25) return score + '｜青：できない';
+      if(score <= 75) return score + '｜黄：妄想ならあり';
+      return score + '｜赤：興奮する';
+    }
+
+    function bottleSvg(score,item){
+      const isLocked = locked.has(item);
+      const height = isLocked ? 20 : (score > 0 ? Math.max(7,Math.round(score * 0.56)) : 0);
+      const y = 74 - height;
+      const fill = isLocked ? 'var(--locked)' : color(score);
+      return `
+        <svg class="bottle-svg" viewBox="0 0 74 88" role="img" aria-label="${escapeHtml(label(score,item))}">
+          <path d="M29 5h16v13c0 4 7 7 7 14v41c0 7-5 11-12 11H34c-7 0-12-4-12-11V32c0-7 7-10 7-14V5z" fill="none" stroke="var(--border)" stroke-width="3"></path>
+          <rect x="25" y="${y}" width="24" height="${height}" rx="6" fill="${fill}" opacity=".82"></rect>
+          <path d="M25 5h24" stroke="var(--border)" stroke-width="3" stroke-linecap="round"></path>
+          ${isLocked ? '<text x="37" y="52" text-anchor="middle" font-size="17" fill="#333">🔒</text>' : ''}
+        </svg>
+      `;
+    }
+
+    function renderBottle(group,item){
+      const key = keyOf(group.cat,item);
+      const score = state[key];
+      const disabled = locked.has(item);
+      return `
+        <div class="bottle-card ${tone(score,item)}">
+          <button type="button" class="bottle-btn" data-key="${escapeHtml(key)}" data-cat="${escapeHtml(group.cat)}" data-item="${escapeHtml(item)}" ${disabled ? 'disabled' : ''}>
+            ${bottleSvg(score,item)}
+            <div class="bottle-name">${escapeHtml(item)}</div>
+            <div class="bottle-score">${escapeHtml(label(score,item))}</div>
+          </button>
+        </div>
+      `;
+    }
+
+    function render(){
+      groupArea.innerHTML = '';
+      groups.forEach(group => {
+        if(filter !== 'all' && filter !== group.cat) return;
+        const section = document.createElement('section');
+        section.className = 'group';
+        section.innerHTML = `
+          <h2 class="group-title"><span class="heart">♡</span>${escapeHtml(group.cat)}</h2>
+          <div class="grid">${group.items.map(item => renderBottle(group,item)).join('')}</div>
+        `;
+        groupArea.appendChild(section);
+      });
+      bindBottleEvents();
+      updateResult();
+      renderPoster();
+    }
+
+    function bindBottleEvents(){
+      document.querySelectorAll('.bottle-btn').forEach(btn => {
+        btn.addEventListener('contextmenu', e => e.preventDefault());
+
+        if(btn.disabled){
+          btn.addEventListener('click', () => {
+            noticeText.textContent = 'この項目は危険・違法・非同意につながる可能性があるため分析外です。';
+          });
+          return;
+        }
+
+        btn.addEventListener('pointerdown', e => {
+          e.preventDefault();
+          activeKey = btn.dataset.key;
+          startAt = Date.now();
+          wasLong = false;
+          btn.setPointerCapture(e.pointerId);
+          btn.classList.add('holding');
+
+          timer = window.setInterval(() => {
+            const ms = Date.now() - startAt;
+            if(ms < 330) return;
+            wasLong = true;
+            const score = Math.min(100, Math.max(1, Math.round(ms / 22)));
+            state[activeKey] = score;
+            refreshButton(btn);
+            updateResult();
+            renderPoster();
+          }, 70);
+        });
+
+        btn.addEventListener('pointerup', () => finishInput(btn));
+        btn.addEventListener('pointercancel', () => finishInput(btn));
+
+        btn.addEventListener('keydown', e => {
+          if(e.key !== 'Enter' && e.key !== ' ') return;
+          e.preventDefault();
+          const key = btn.dataset.key;
+          state[key] = nextTapScore(state[key]);
+          render();
+        });
+      });
+    }
+
+    function nextTapScore(score){
+      if(score === 0) return 15;
+      if(score <= 25) return 50;
+      if(score <= 75) return 90;
+      return 0;
+    }
+
+    function finishInput(btn){
+      if(!activeKey) return;
+      clearInterval(timer);
+
+      if(wasLong){
+        const score = Math.min(100, Math.max(1, Math.round((Date.now() - startAt) / 22)));
+        state[activeKey] = score;
+      }else{
+        state[activeKey] = nextTapScore(state[activeKey]);
+      }
+
+      activeKey = '';
+      btn.classList.remove('holding');
+      render();
+    }
+
+    function refreshButton(btn){
+      const key = btn.dataset.key;
+      const item = btn.dataset.item;
+      const score = state[key];
+      const card = btn.closest('.bottle-card');
+      card.className = 'bottle-card ' + tone(score,item);
+      btn.innerHTML = `
+        ${bottleSvg(score,item)}
+        <div class="bottle-name">${escapeHtml(item)}</div>
+        <div class="bottle-score">${escapeHtml(label(score,item))}</div>
+      `;
+    }
+
+    function categoryScores(){
+      return groups.map(group => {
+        const vals = group.items
+          .filter(item => !locked.has(item))
+          .map(item => state[keyOf(group.cat,item)])
+          .filter(v => v > 0);
+        const avg = vals.length ? Math.round(vals.reduce((a,b)=>a+b,0) / vals.length) : 0;
+        return {cat:group.cat,avg:avg,count:vals.length};
+      }).sort((a,b) => b.avg - a.avg);
+    }
+
+    function makeType(cat,avg){
+      if(avg <= 25) return '青瓶多めの慎重タイプ';
+      const map = {
+        '最下層マン':'尽くしたい服従型',
+        '被虐マン':'強め刺激に弱い被虐型',
+        'オナホマン':'用途化されたい消費型',
+        '表露マン':'羞恥で火がつく表露型',
+        '管理マン':'管理されたいルール型',
+        'ガチボコマン':'強刺激寄りタイプ',
+        '主従マン':'主従関係に弱いタイプ',
+        '首輪マン':'首輪としつけに弱いタイプ',
+        'フェチマン':'細部に刺さるフェチ型',
+        '露出マン':'見られる緊張感タイプ',
+        '背徳愛マン':'背徳感で燃えるタイプ'
+      };
+      return map[cat] || '複合タイプ';
+    }
+
+    function currentSummary(){
+      const ranked = categoryScores();
+      const active = ranked.filter(r => r.count > 0);
+      if(active.length === 0){
+        return {active:false,type:'未診断',top:'未入力',second:'未入力',ranked};
+      }
+      const top = active[0];
+      const second = active[1] || active[0];
+      return {active:true,type:makeType(top.cat,top.avg),top:top.cat,second:second.cat,ranked};
+    }
+
+    function updateResult(){
+      const usableKeys = Object.keys(state).filter(key => !locked.has(itemFromKey(key)));
+      const vals = usableKeys.map(key => state[key]);
+      const done = vals.filter(v => v > 0).length;
+      const red = vals.filter(v => v >= 76).length;
+      const blue = vals.filter(v => v > 0 && v <= 25).length;
+
+      document.getElementById('redCount').textContent = red;
+      document.getElementById('blueCount').textContent = blue;
+      document.getElementById('totalCount').textContent = Object.keys(state).length;
+      document.getElementById('doneCount').textContent = '入力済み ' + done + ' / 対応 ' + usableKeys.length;
+
+      const summary = currentSummary();
+      const ranked = summary.ranked;
+
+      if(!summary.active){
+        document.getElementById('typeName').textContent = '未診断';
+        document.getElementById('typeHint').textContent = '瓶を選んでください';
+        document.getElementById('resultText').textContent = 'まだ瓶が選ばれていません。';
+      }else{
+        const redItems = [];
+        const blueItems = [];
+
+        groups.forEach(group => group.items.forEach(item => {
+          if(locked.has(item)) return;
+          const v = state[keyOf(group.cat,item)];
+          if(v >= 76) redItems.push(item);
+          if(v > 0 && v <= 25) blueItems.push(item);
+        }));
+
+        document.getElementById('typeName').textContent = summary.type;
+        document.getElementById('typeHint').textContent = summary.top + 'が強め';
+        document.getElementById('resultText').innerHTML = `
+          <p><span class="badge">${escapeHtml(summary.type)}</span></p>
+          <p>今の回答では、<strong>${escapeHtml(summary.top)}</strong>と<strong>${escapeHtml(summary.second)}</strong>が強めです。</p>
+          <p class="small">赤い瓶：${escapeHtml(redItems.slice(0,8).join('、') || 'まだなし')}<br>青い瓶：${escapeHtml(blueItems.slice(0,8).join('、') || 'まだなし')}</p>
+          <p class="small">現実では、同意・安全・合法・相手の安心を必ず優先してください。</p>
+        `;
+      }
+
+      document.getElementById('categoryBars').innerHTML = ranked.map(row => `
+        <div>
+          <div class="bar-head">
+            <span>${escapeHtml(row.cat)} <span class="small">${row.count}件</span></span>
+            <span>${row.avg}</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width:${row.avg}%;background:${color(row.avg)}"></div></div>
+        </div>
+      `).join('');
+    }
+
+    function renderPoster(){
+      const summary = currentSummary();
+      const redCount = Object.keys(state).filter(k => !locked.has(itemFromKey(k)) && state[k] >= 76).length;
+      const blueCount = Object.keys(state).filter(k => !locked.has(itemFromKey(k)) && state[k] > 0 && state[k] <= 25).length;
+      const done = Object.keys(state).filter(k => !locked.has(itemFromKey(k)) && state[k] > 0).length;
+
+      const columns = groups.map(group => `
+        <div class="poster-col">
+          <div class="poster-cat">${escapeHtml(group.cat)}</div>
+          ${group.items.map(item => {
+            const score = state[keyOf(group.cat,item)];
+            const fill = fillHeight(score,item);
+            const fillColor = posterColor(score,item);
+            const lockedIcon = locked.has(item) ? '🔒 ' : '';
+            return `
+              <div class="mini-bottle">
+                <div class="mini-fill" style="height:${fill}%;background:${fillColor}"></div>
+                <div class="mini-label">${lockedIcon}${escapeHtml(item)}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `).join('');
+
+      document.getElementById('poster').innerHTML = `
+        <div class="poster-header">
+          <div>
+            <div class="poster-title">性癖の瓶（分析機能付き）</div>
+            <div class="poster-sub">〜あなたの中の赤い瓶、青い瓶を分析します〜</div>
+          </div>
+          <div class="poster-legend">
+            <span class="legend-red">赤：興奮する</span>
+            <span class="legend-blue">青：できない</span>
+            <span class="legend-yellow">黄：妄想ならあり</span>
+            
+          </div>
+        </div>
+        <div class="poster-type">
+          <span>診断タイプ：${escapeHtml(summary.type)}</span>
+          <span>強め：${escapeHtml(summary.top)} / ${escapeHtml(summary.second)}</span>
+          <span>赤 ${redCount}｜青 ${blueCount}｜入力 ${done}</span>
+        </div>
+        <div class="poster-grid">${columns}</div>
+        <div class="poster-foot">
+          <span>成人同士の同意・安全・合法が前提の娯楽用診断</span>
+          <span>未入力は白、入力結果は青・黄・赤で表示</span>
+        </div>
+      `;
+    }
+
+    function makeShareText(){
+      const ranked = categoryScores().filter(r => r.count > 0);
+      if(ranked.length === 0){
+        document.getElementById('shareText').value = 'まだ診断結果がありません。';
+        return;
+      }
+      const top = ranked[0];
+      const second = ranked[1] || ranked[0];
+      const type = makeType(top.cat,top.avg);
+      const redItems = [];
+      const blueItems = [];
+      groups.forEach(group => group.items.forEach(item => {
+        if(locked.has(item)) return;
+        const v = state[keyOf(group.cat,item)];
+        if(v >= 76) redItems.push(item);
+        if(v > 0 && v <= 25) blueItems.push(item);
+      }));
+      const text = [
+        '性癖の瓶メーカー診断結果',
+        '',
+        'タイプ：' + type,
+        '強め：' + top.cat + ' / ' + second.cat,
+        '赤い瓶：' + (redItems.slice(0,6).join('、') || 'なし'),
+        '青い瓶：' + (blueItems.slice(0,6).join('、') || 'なし'),
+        '',
+        '※成人同士の同意・安全・合法が前提の娯楽用診断'
+      ].join('\n');
+      const area = document.getElementById('shareText');
+      area.value = text;
+      area.focus();
+      area.select();
+    }
+
+    function showPoster(){
+      renderPoster();
+      document.getElementById('screenPanel').classList.remove('hidden');
+      document.getElementById('screenPanel').scrollIntoView({behavior:'smooth',block:'start'});
+    }
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+      document.getElementById('gate').classList.add('hidden');
+    });
+
+    filterSelect.addEventListener('change', e => {
+      filter = e.target.value;
+      render();
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      Object.keys(state).forEach(key => state[key] = 0);
+      document.getElementById('shareText').value = '結果文を作成するとここに表示されます。';
+      render();
+    });
+
+    document.getElementById('shareBtn').addEventListener('click', makeShareText);
+    document.getElementById('showPosterBtn').addEventListener('click', showPoster);
+
+    document.getElementById('backBtn').addEventListener('click', () => {
+      document.body.classList.remove('poster-only');
+      document.getElementById('screenPanel').classList.add('hidden');
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+
+    document.getElementById('posterOnlyBtn').addEventListener('click', () => {
+      renderPoster();
+      document.body.classList.toggle('poster-only');
+      document.getElementById('screenPanel').classList.remove('hidden');
+      window.scrollTo({top:0,behavior:'smooth'});
+      document.getElementById('posterOnlyBtn').textContent = document.body.classList.contains('poster-only') ? '通常スクショ表示' : 'スクショ専用表示';
+    });
+
+    document.getElementById('printBtn').addEventListener('click', () => {
+      renderPoster();
+      window.print();
+    });
+
+    render();
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
