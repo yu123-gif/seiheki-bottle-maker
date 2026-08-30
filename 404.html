@@ -416,6 +416,70 @@
       }
     }
 
+
+    .poster-scale-controls{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:10px;
+      margin:0 0 12px;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:rgba(255,255,255,.78);
+    }
+    .poster-scale-controls label{
+      font-weight:1000;
+      color:var(--ink);
+      white-space:nowrap;
+    }
+    .poster-scale-controls input[type="range"]{
+      width:min(360px,52vw);
+      accent-color:var(--accent);
+    }
+    .poster-scale-value{
+      min-width:54px;
+      font-weight:1000;
+      color:var(--accent);
+      text-align:right;
+    }
+    .poster-scale-hint{
+      color:var(--muted);
+      font-size:.86rem;
+      font-weight:800;
+    }
+    .poster-scale-controls button{
+      padding:8px 12px;
+      min-height:auto;
+      border-radius:999px;
+      font-size:.9rem;
+      background:#fff;
+    }
+    .poster-viewport{
+      overflow:auto;
+      width:100%;
+      touch-action:none;
+      border-radius:12px;
+      overscroll-behavior:contain;
+    }
+    .poster-scale-inner{
+      transform-origin:top left;
+      width:max-content;
+      transition:transform .08s linear;
+    }
+    @media(max-width:640px){
+      .poster-scale-controls{
+        gap:8px;
+      }
+      .poster-scale-controls input[type="range"]{
+        width:100%;
+        order:4;
+      }
+      .poster-scale-hint{
+        width:100%;
+      }
+    }
+
     .hidden{display:none!important}
     .poster-only .main-app{display:none}
     .poster-only .poster-wrap{padding:0;border:none;box-shadow:none;overflow:visible}
@@ -520,7 +584,18 @@
         <button id="printBtn" type="button">印刷 / PDF保存</button>
       </div>
       <div class="poster-wrap">
-        <div id="poster" class="poster"></div>
+        <div class="poster-scale-controls" id="posterScaleControls">
+          <label for="posterScale">瓶一覧の表示倍率</label>
+          <input id="posterScale" type="range" min="55" max="120" value="100" step="5">
+          <span id="posterScaleValue" class="poster-scale-value">100%</span>
+          <button id="posterScaleReset" type="button">100%に戻す</button>
+          <span class="poster-scale-hint">スマホは2本指でも拡大縮小できます</span>
+        </div>
+        <div id="posterViewport" class="poster-viewport">
+          <div id="posterScaleInner" class="poster-scale-inner">
+            <div id="poster" class="poster"></div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -552,6 +627,9 @@
     let smTrait = '';
     let genderTrait = '';
     let activeKey = '';
+    let posterScale = 1;
+    let pinchStartDistance = null;
+    let pinchStartScale = 1;
     let startAt = 0;
     let wasLong = false;
     let timer = 0;
@@ -1379,6 +1457,30 @@
     }
 
 
+
+    function setPosterScale(value){
+      posterScale = Math.max(0.55, Math.min(1.2, Number(value) || 1));
+      const slider = document.getElementById('posterScale');
+      const valueEl = document.getElementById('posterScaleValue');
+      const inner = document.getElementById('posterScaleInner');
+      const poster = document.getElementById('poster');
+      if(slider) slider.value = String(Math.round(posterScale * 100));
+      if(valueEl) valueEl.textContent = Math.round(posterScale * 100) + '%';
+      if(inner) inner.style.transform = `scale(${posterScale})`;
+      if(inner && poster){
+        inner.style.width = (poster.offsetWidth * posterScale) + 'px';
+        inner.style.height = (poster.offsetHeight * posterScale) + 'px';
+      }
+    }
+
+    function distanceBetweenTouches(touches){
+      const a = touches[0];
+      const b = touches[1];
+      const dx = a.clientX - b.clientX;
+      const dy = a.clientY - b.clientY;
+      return Math.sqrt(dx*dx + dy*dy);
+    }
+
     function renderPoster(){
       const result = resultMarkup();
       const picks = allItems();
@@ -1442,6 +1544,7 @@
           <span>赤：興奮する　黄：妄想ならあり　青：できない　白：未入力</span>
           <span>成人同士の同意・安全・合法が前提の娯楽用診断</span>
         </div>`;
+      requestAnimationFrame(() => setPosterScale(posterScale));
     }
 
 
@@ -1476,6 +1579,34 @@
     document.getElementById('lineResultBtn').addEventListener('click', () => {
       copyTextForLine(resultMessageForLine());
     });
+
+    document.getElementById('posterScale').addEventListener('input', e => {
+      setPosterScale(Number(e.target.value) / 100);
+    });
+    document.getElementById('posterScaleReset').addEventListener('click', () => {
+      setPosterScale(1);
+    });
+    const posterViewport = document.getElementById('posterViewport');
+    posterViewport.addEventListener('touchstart', e => {
+      if(e.touches.length === 2){
+        pinchStartDistance = distanceBetweenTouches(e.touches);
+        pinchStartScale = posterScale;
+      }
+    }, {passive:true});
+    posterViewport.addEventListener('touchmove', e => {
+      if(e.touches.length === 2 && pinchStartDistance){
+        e.preventDefault();
+        const currentDistance = distanceBetweenTouches(e.touches);
+        const nextScale = pinchStartScale * (currentDistance / pinchStartDistance);
+        setPosterScale(nextScale);
+      }
+    }, {passive:false});
+    posterViewport.addEventListener('touchend', e => {
+      if(e.touches.length < 2){
+        pinchStartDistance = null;
+      }
+    }, {passive:true});
+
     document.getElementById('posterBtn').addEventListener('click', () => {
       renderPoster();
       document.getElementById('screenPanel').classList.remove('hidden');
