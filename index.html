@@ -586,7 +586,7 @@
       <div class="poster-wrap">
         <div class="poster-scale-controls" id="posterScaleControls">
           <label for="posterScale">瓶一覧の表示倍率</label>
-          <input id="posterScale" type="range" min="55" max="120" value="100" step="5">
+          <input id="posterScale" type="range" min="25" max="120" value="100" step="5">
           <span id="posterScaleValue" class="poster-scale-value">100%</span>
           <button id="posterScaleReset" type="button">100%に戻す</button>
           <span class="poster-scale-hint">スマホは2本指でも拡大縮小できます</span>
@@ -1459,7 +1459,7 @@
 
 
     function setPosterScale(value){
-      posterScale = Math.max(0.55, Math.min(1.2, Number(value) || 1));
+      posterScale = Math.max(0.25, Math.min(1.2, Number(value) || 1));
       const slider = document.getElementById('posterScale');
       const valueEl = document.getElementById('posterScaleValue');
       const inner = document.getElementById('posterScaleInner');
