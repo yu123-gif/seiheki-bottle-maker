@@ -1,7 +1,7 @@
 {
   "name": "性癖の瓶メーカー",
   "short_name": "性癖の瓶",
-  "description": "不要なスクショ専用表示ボタンを削除した版",
+  "description": "赤い瓶・青い瓶を選んで遊べる診断アプリ",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
