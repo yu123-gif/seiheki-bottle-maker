@@ -3,17 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>性癖の瓶メーカー｜診断強化版 v7.1</title>
-  <meta name="description" content="LINEで送って遊べる、赤い瓶・青い瓶のオラクル鑑定アプリ">
-  <meta property="og:title" content="性癖の瓶メーカー">
-  <meta property="og:description" content="赤い瓶・青い瓶であなたの傾向をオラクル鑑定します。">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary">
-  <meta name="description" content="LINEで送って遊べる、赤い瓶・青い瓶のオラクル鑑定アプリ">
-  <meta property="og:title" content="性癖の瓶メーカー">
-  <meta property="og:description" content="赤い瓶・青い瓶であなたの傾向をオラクル鑑定します。">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary">
+  <title>性癖の瓶メーカー｜不要ボタン削除版 v9.13</title>
   <meta name="theme-color" content="#0d1636">
   <meta name="description" content="赤い瓶・青い瓶で傾向を鑑定するオラクル風Webアプリ">
   <style>
@@ -53,6 +43,84 @@
     }
     .panel{padding:16px;margin:14px 0}
     .top-note{background:linear-gradient(90deg,#fff,var(--accent-soft));border-left:6px solid var(--accent)}
+
+    .profile-select{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin:14px 0 8px;
+    }
+    .profile-btn{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:16px;
+      padding:13px 12px;
+      text-align:left;
+      min-height:78px;
+      transition:.12s transform,.12s border-color,.12s box-shadow,.12s background;
+      cursor:pointer;
+    }
+    .profile-btn:hover{
+      transform:translateY(-1px);
+      border-color:var(--accent);
+      box-shadow:0 8px 20px rgba(214,93,159,.12);
+    }
+    .profile-btn.active{
+      background:var(--accent-soft);
+      border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(217,77,152,.12);
+    }
+    .profile-title{
+      display:block;
+      font-weight:1000;
+      font-size:1.04rem;
+      margin-bottom:4px;
+    }
+    .profile-desc{
+      display:block;
+      color:var(--muted);
+      font-size:.86rem;
+      line-height:1.35;
+    }
+    .profile-heading{
+      margin:14px 0 6px;
+      font-size:.95rem;
+      color:var(--muted);
+      font-weight:900;
+    }
+    .profile-chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin:6px 0 12px;
+    }
+    .profile-chip{
+      display:inline-flex;
+      align-items:center;
+      border:1px solid rgba(255,255,255,.25);
+      background:rgba(255,255,255,.10);
+      color:#fff;
+      border-radius:999px;
+      padding:5px 10px;
+      font-size:.84rem;
+      font-weight:900;
+    }
+    #lineAppBtn,#lineResultBtn{
+      border-color:#06c755;
+      font-weight:800;
+      color:#075d2b;
+      background:#effff5;
+    }
+    .copy-status{
+      font-size:.9rem;
+      color:#075d2b;
+      font-weight:800;
+      align-self:center;
+    }
+    @media(max-width:640px){
+      .profile-select{grid-template-columns:1fr}
+    }
+
     .legend{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
     .legend div{padding:10px 12px;border-radius:14px;border:1px solid var(--line);font-weight:800}
     .legend .blue{background:#dce9ff}
@@ -65,8 +133,6 @@
     }
     button{cursor:pointer}
     button.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:800}
-    #lineAppBtn,#lineResultBtn{border-color:#06c755;font-weight:800;color:#075d2b;background:#effff5}
-    .copy-status{font-size:.9rem;color:#075d2b;font-weight:800}
     .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
     .metric{padding:14px}
     .metric .label{font-size:.84rem;color:var(--muted)}
@@ -170,7 +236,7 @@
     .screen-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px}
     .poster-wrap{padding:12px;overflow:auto}
     .poster{
-      width:1150px;background:#fff;border-radius:12px;padding:18px 16px 22px;color:#151515
+      width:1150px;background:#fff;border-radius:12px;padding:8px 10px 10px;color:#151515
     }
     .poster-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
     .poster-title{font-size:32px;font-weight:1000;line-height:1.1}
@@ -208,14 +274,148 @@
       position:absolute;left:0;right:0;bottom:0;height:0;background:#fff;opacity:.88
     }
     .poster-bottle .label{
-      position:absolute;left:5px;right:5px;top:16px;bottom:6px;display:-webkit-box;
+      position:absolute;left:3px;right:3px;top:14px;bottom:4px;display:-webkit-box;
       -webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
-      text-align:center;font-size:13.6px;line-height:.96;font-weight:1000;z-index:5;
+      text-align:center;font-size:15.4px;line-height:.90;font-weight:1000;z-index:5;
       align-items:center;justify-content:center;
       word-break:keep-all;overflow-wrap:anywhere;
-      text-shadow:0 1px 0 rgba(255,255,255,.97),1px 0 0 rgba(255,255,255,.90),-1px 0 0 rgba(255,255,255,.90)
+      text-shadow:0 1px 0 rgba(255,255,255,.97),1px 0 0 rgba(255,255,255,.90),-1px 0 0 rgba(255,255,255,.90);
+      letter-spacing:-.04em
     }
     .poster-foot{margin-top:12px;display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#666}
+
+    @media(orientation:landscape) and (max-height:520px){
+      .poster{width:100vw;padding:4px;border-radius:0}
+      .poster-grid{grid-template-columns:repeat(11,1fr);gap:5px}
+      .poster-col{gap:4px}
+      .poster-cat{min-height:27px;font-size:9.6px;padding:2px}
+      .poster-bottle{height:42px;padding:0 1px 2px}
+      .poster-bottle .cap{width:18px;height:5px;top:-3px}
+      .poster-bottle .neck{width:16px;height:7px}
+      .poster-bottle .body{top:6px;border-radius:8px 8px 10px 10px}
+      .poster-bottle .label{top:10px;bottom:2px;font-size:10.4px;line-height:.86;left:2px;right:2px}
+      .poster-foot{display:none}
+    }
+
+
+    .poster-shot-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      padding:4px 4px 8px;
+      margin-bottom:8px;
+      border-bottom:2px solid rgba(17,24,39,.12);
+    }
+    .poster-shot-title{
+      font-size:34px;
+      line-height:1.05;
+      font-weight:1000;
+      letter-spacing:-.04em;
+      color:#111827;
+    }
+    .poster-shot-sub{
+      margin-top:3px;
+      font-size:13px;
+      line-height:1.2;
+      color:#4b5563;
+      font-weight:900;
+    }
+    .poster-shot-meta{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:6px;
+      max-width:48%;
+    }
+    .poster-shot-meta span{
+      border:2px solid #f0a6c8;
+      background:#fff7fb;
+      border-radius:999px;
+      padding:4px 9px;
+      font-size:12px;
+      line-height:1;
+      font-weight:1000;
+      color:#111827;
+      white-space:nowrap;
+    }
+    @media(orientation:landscape) and (max-height:520px){
+      .poster-shot-head{
+        padding:2px 2px 4px;
+        margin-bottom:4px;
+      }
+      .poster-shot-title{
+        font-size:18px;
+      }
+      .poster-shot-sub{
+        font-size:8.5px;
+        margin-top:1px;
+      }
+      .poster-shot-meta{
+        gap:3px;
+        max-width:56%;
+      }
+      .poster-shot-meta span{
+        font-size:7.5px;
+        padding:2px 4px;
+        border-width:1px;
+      }
+    }
+
+
+    .poster-shot-result{
+      margin:0 0 8px;
+      display:grid;
+      grid-template-columns:1.35fr .9fr;
+      gap:8px;
+    }
+    .poster-shot-result .result-box{
+      border:2px solid #f0a6c8;
+      background:#fff7fb;
+      border-radius:14px;
+      padding:7px 10px;
+      color:#111827;
+      overflow:hidden;
+    }
+    .poster-shot-result .cap{
+      font-size:10.5px;
+      color:#6b7280;
+      font-weight:1000;
+      margin-bottom:2px;
+      letter-spacing:.02em;
+    }
+    .poster-shot-result .main{
+      font-size:18px;
+      line-height:1.15;
+      font-weight:1000;
+      letter-spacing:-.02em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .poster-shot-result .main.depth{
+      color:#be185d;
+    }
+    @media(orientation:landscape) and (max-height:520px){
+      .poster-shot-result{
+        margin-bottom:4px;
+        gap:4px;
+      }
+      .poster-shot-result .result-box{
+        padding:3px 5px;
+        border-radius:8px;
+        border-width:1px;
+      }
+      .poster-shot-result .cap{
+        font-size:7px;
+        margin-bottom:1px;
+      }
+      .poster-shot-result .main{
+        font-size:10px;
+        line-height:1.05;
+      }
+    }
+
     .hidden{display:none!important}
     .poster-only .main-app{display:none}
     .poster-only .poster-wrap{padding:0;border:none;box-shadow:none;overflow:visible}
@@ -249,8 +449,41 @@
       </header>
 
       <section class="panel top-note">
-        <strong>鑑定ロジック強化版 v7 です。診断結果をかなり長め・感情寄りに作り直しました。</strong>
-        <p class="sub">タップで「未入力 → 青 → 黄 → 赤 → 未入力」。長押しなら細かく強さを入力できます。コメントは占いっぽく、エンタメ寄りに強化しました。</p>
+        <strong>Ver5系診断＋S/M・性別対応版 v9.13 です。不要な表示切替ボタンを削除しました。ドS・ドMの濃さは直接聞かず、選んだ瓶から推定します。</strong>
+        <p class="sub">最初にS/M気質と性別を選んでから、瓶を選んでください。診断結果はVer5系の占いっぽい雰囲気です。ドS・ドMの濃さは直接聞かず、赤・黄・青の選び方から推定します。</p>
+
+        <div class="profile-heading">1. S/M気質を選択</div>
+        <div id="smSelect" class="profile-select" aria-label="S/M気質を選択">
+          <button type="button" class="profile-btn sm-btn" data-sm="S">
+            <span class="profile-title">S気質</span>
+            <span class="profile-desc">相手をリードしたい。反応を引き出す側。</span>
+          </button>
+          <button type="button" class="profile-btn sm-btn" data-sm="M">
+            <span class="profile-title">M気質</span>
+            <span class="profile-desc">相手に委ねたい。扱われることで燃える側。</span>
+          </button>
+          <button type="button" class="profile-btn sm-btn" data-sm="Mix">
+            <span class="profile-title">どちらも</span>
+            <span class="profile-desc">相手や空気で、攻めと受けが入れ替わる。</span>
+          </button>
+        </div>
+
+        <div class="profile-heading">2. 性別を選択</div>
+        <div id="genderSelect" class="profile-select" aria-label="性別を選択">
+          <button type="button" class="profile-btn gender-btn" data-gender="male">
+            <span class="profile-title">男性</span>
+            <span class="profile-desc">独占欲・主導権・守りたい欲を少し強めに読む。</span>
+          </button>
+          <button type="button" class="profile-btn gender-btn" data-gender="female">
+            <span class="profile-title">女性</span>
+            <span class="profile-desc">安心感・委ね方・愛され方を少し強めに読む。</span>
+          </button>
+          <button type="button" class="profile-btn gender-btn" data-gender="other">
+            <span class="profile-title">その他・未回答</span>
+            <span class="profile-desc">性別に寄せすぎず、瓶の傾向を中心に読む。</span>
+          </button>
+        </div>
+
         <div class="legend">
           <div class="blue">青：できない</div>
           <div class="yellow">黄：妄想ならあり</div>
@@ -260,7 +493,7 @@
           <select id="filter"><option value="all">全項目</option></select>
           <button id="resetBtn" type="button">リセット</button>
           <button id="shareBtn" type="button">共有文を作成</button>
-          <button id="posterBtn" class="primary" type="button">スクショ用ボードを表示</button>
+          <button id="posterBtn" class="primary" type="button">瓶一覧を表示</button>
           <button id="lineAppBtn" type="button">アプリURLをコピー</button>
           <button id="lineResultBtn" type="button">診断結果をコピー</button><span id="copyStatus" class="copy-status"></span>
         </div>
@@ -280,14 +513,13 @@
         <div id="resultText">まだ瓶が選ばれていません。</div>
         <div id="categoryBars" class="bars"></div>
         <h3 style="margin:20px 0 8px;font-size:1.18rem">共有用コピー結果</h3>
-        <textarea id="shareText" readonly>診断結果やLINEに貼り付ける文章がここに表示されます。</textarea>
+        <textarea id="shareText" readonly>共有文を作成するとここに表示されます。</textarea>
       </section>
     </div>
 
     <section id="screenPanel" class="screen-panel hidden">
       <div class="screen-tools">
         <button id="backBtn" type="button">通常画面に戻る</button>
-        <button id="posterOnlyBtn" type="button">スクショ専用表示</button>
         <button id="printBtn" type="button">印刷 / PDF保存</button>
       </div>
       <div class="poster-wrap">
@@ -320,6 +552,8 @@
     ];
     const state = {};
     let filter = 'all';
+    let smTrait = '';
+    let genderTrait = '';
     let activeKey = '';
     let startAt = 0;
     let wasLong = false;
@@ -557,6 +791,149 @@
       return norm.filter(r => r.selected > 0).slice(0,3);
     }
 
+
+    function smLabel(){
+      if(smTrait === 'S') return 'S気質';
+      if(smTrait === 'M') return 'M気質';
+      if(smTrait === 'Mix') return 'S/M両面型';
+      return '気質未選択';
+    }
+
+    function genderLabel(){
+      if(genderTrait === 'male') return '男性';
+      if(genderTrait === 'female') return '女性';
+      if(genderTrait === 'other') return 'その他・未回答';
+      return '性別未選択';
+    }
+
+    function redCatCount(picks, cats){
+      return picks.red.filter(x => cats.includes(x.cat)).length;
+    }
+
+    function yellowCatCount(picks, cats){
+      return picks.yellow.filter(x => cats.includes(x.cat)).length;
+    }
+
+    function redItemCount(picks, items){
+      return picks.red.filter(x => items.includes(x.item)).length;
+    }
+
+    function smDepthScore(info, picks){
+      if(!info || !picks) return 0;
+      const mCats = ['最下層マン','被虐マン','オナホマン','主従マン','首輪マン','管理マン'];
+      const sCats = ['管理マン','主従マン','首輪マン','表露マン','露出マン','背徳愛マン'];
+      const sItems = ['言葉責め','しつけ','お仕置き','絶頂管理','行動報告','下着管理','会話チェック','服装管理','罰ゲーム','羞恥お使い','公衆での羞恥会話','束縛','焦らし','寸止め'];
+      const mItems = ['奴隷','謝罪','足で踏まれる','土下座','最下層奉仕','犬扱い','首輪（リード）','ご奉仕','拘束','束縛','焦らし','寸止め','SEX懇願'];
+
+      let score = Math.min(45, info.redTotal * 4) + Math.min(25, info.yellowTotal * 2);
+      if(smTrait === 'S'){
+        score += redCatCount(picks, sCats) * 6 + redItemCount(picks, sItems) * 5;
+      } else if(smTrait === 'M'){
+        score += redCatCount(picks, mCats) * 6 + redItemCount(picks, mItems) * 5;
+      } else if(smTrait === 'Mix'){
+        score += Math.min(30, redCatCount(picks, sCats) * 4) + Math.min(30, redCatCount(picks, mCats) * 4);
+      } else {
+        score += 0;
+      }
+      if(info.focus === '集中') score += 8;
+      if(info.intensity === '濃厚') score += 12;
+      if(info.intensity === '強め') score += 6;
+      return Math.max(0, Math.min(100, Math.round(score)));
+    }
+
+    function smDepthLabel(info, picks){
+      if(!info || !picks) return smTrait ? '未診断' : '気質未選択';
+      const score = smDepthScore(info, picks);
+      if(!smTrait) return '気質未選択';
+      if(smTrait === 'S'){
+        if(score >= 82) return 'ドS寄り';
+        if(score >= 62) return '強S寄り';
+        if(score >= 38) return 'S寄り';
+        return 'ライトS';
+      }
+      if(smTrait === 'M'){
+        if(score >= 82) return 'ドM寄り';
+        if(score >= 62) return '強M寄り';
+        if(score >= 38) return 'M寄り';
+        return 'ライトM';
+      }
+      if(score >= 78) return '攻守反転かなり強め';
+      if(score >= 55) return '攻守反転型';
+      if(score >= 34) return '気分で反転型';
+      return 'ライト両面型';
+    }
+
+    function profileTitlePrefix(info, picks){
+      const depth = info && picks ? smDepthLabel(info, picks) : smLabel();
+      if(depth === 'ドS寄り' && genderTrait === 'female') return 'ドS小悪魔の';
+      if(depth === 'ドS寄り' && genderTrait === 'male') return '支配濃度高めの';
+      if(depth === 'ドM寄り' && genderTrait === 'male') return 'ドMロイヤルな';
+      if(depth === 'ドM寄り' && genderTrait === 'female') return '深層委託の';
+      if(depth === '強S寄り' && genderTrait === 'female') return '小悪魔采配の';
+      if(depth === '強M寄り' && genderTrait === 'male') return '従属ロイヤルな';
+
+      if(smTrait === 'S' && genderTrait === 'male') return '支配欲を香らせる';
+      if(smTrait === 'S' && genderTrait === 'female') return '小悪魔采配の';
+      if(smTrait === 'M' && genderTrait === 'male') return '従属ロイヤルな';
+      if(smTrait === 'M' && genderTrait === 'female') return '愛され委託の';
+      if(smTrait === 'Mix' && genderTrait === 'male') return '攻守反転の';
+      if(smTrait === 'Mix' && genderTrait === 'female') return '甘辛反転の';
+      if(smTrait === 'S') return '支配開花の';
+      if(smTrait === 'M') return '委託陶酔の';
+      if(smTrait === 'Mix') return '反転両面の';
+      return '';
+    }
+
+    function profileMood(){
+      const sm = {
+        S:'相手の反応を引き出すことに快感が寄りやすく、主導権を握るほど色気が増す',
+        M:'相手に委ねることで安心と興奮が重なり、選ばれて扱われるほど深く沈みやすい',
+        Mix:'相手の強さや空気によって、攻めたい欲と委ねたい欲が入れ替わりやすい'
+      }[smTrait] || 'S/M気質が未選択なので、瓶そのものの傾向を中心に出しています';
+
+      const gender = {
+        male:'男性側の欲として、強がり・独占欲・主導権への意識が裏側に混ざりやすい',
+        female:'女性側の欲として、安心感・特別扱い・主導権を握る色気が出方に混ざりやすい',
+        other:'性別の型よりも、相手との関係性や空気でスイッチが決まりやすい'
+      }[genderTrait] || '性別が未選択なので、男女どちらにも寄せすぎずに読んでいます';
+
+      return {sm, gender};
+    }
+
+    function profileOneLine(){
+      if(smTrait === 'S' && genderTrait === 'male') return '攻めたい欲の奥に、相手を自分色に染めたい独占欲が見えます。';
+      if(smTrait === 'S' && genderTrait === 'female') return '可愛く見せながら、実は主導権を握りたい小悪魔性が出ています。';
+      if(smTrait === 'M' && genderTrait === 'male') return '強がりの奥に、信頼できる相手へ主導権を渡したい甘さがあります。';
+      if(smTrait === 'M' && genderTrait === 'female') return '大切に選ばれたうえで崩されたい、愛情確認型のM気質が出ています。';
+      if(smTrait === 'Mix' && genderTrait === 'male') return '場面によって攻めにも受けにも変わる、相手依存の反転気質です。';
+      if(smTrait === 'Mix' && genderTrait === 'female') return '甘えたい日と試したい日が入れ替わる、揺れ幅のある魅力です。';
+      if(smTrait === 'S') return '相手の反応を見て、自分の中のスイッチも強くなるタイプです。';
+      if(smTrait === 'M') return '安心できる相手にだけ、深く委ねる温度が出やすいタイプです。';
+      if(smTrait === 'Mix') return '相手次第で攻守が変わる、固定されないタイプです。';
+      return 'S/M気質と性別を選ぶと、ここがさらにあなた向けに変わります。';
+    }
+
+    function genderSmReading(info, picks){
+      if(!info || !picks) return '瓶を選ぶと、性別とS/M気質を合わせた読み取りが表示されます。';
+      const depth = smDepthLabel(info, picks);
+      if(genderTrait === 'male' && smTrait === 'M'){
+        return `${depth}の男性として読むと、表では強く見せたい部分と、深いところで主導権を預けたい部分のギャップが魅力です。これは弱さではなく、信頼した相手にだけ見せる“裏の甘さ”です。`;
+      }
+      if(genderTrait === 'female' && smTrait === 'S'){
+        return `${depth}の女性として読むと、ただ強いだけではなく、相手の反応を見て温度を上げていく小悪魔性が出ています。可愛さの奥に、主導権を握るセンスがあります。`;
+      }
+      if(genderTrait === 'male' && smTrait === 'S'){
+        return `${depth}の男性として読むと、独占欲や守りたい感覚が支配欲と混ざりやすいタイプです。強引さよりも、相手が自分に染まっていく過程に満足しやすいでしょう。`;
+      }
+      if(genderTrait === 'female' && smTrait === 'M'){
+        return `${depth}の女性として読むと、安心できる相手にだけ深く委ねたい、愛情確認型の甘さが出ています。雑に扱われたいのではなく、選ばれて崩されたいタイプです。`;
+      }
+      if(smTrait === 'Mix'){
+        return `${depth}として読むと、SかMかを固定すると浅くなります。相手の強さ、空気、言葉の温度によって、攻めたい日と委ねたい日が入れ替わるタイプです。`;
+      }
+      return `${depth}として、瓶の選び方から気質の濃さを推定しています。`;
+    }
+
     function patternInfo(norm, picks){
       const active = norm.filter(r => r.selected > 0);
       const redTotal = picks.red.length;
@@ -564,181 +941,246 @@
       const blueTotal = picks.blue.length;
       const activeCats = active.length;
       const responseRate = Math.round((redTotal + yellowTotal + blueTotal) / Object.keys(state).length * 100);
+
       const spreadRedCats = new Set(picks.red.map(x => x.cat)).size;
       const focus = spreadRedCats >= 5 ? '横断' : spreadRedCats >= 3 ? '混合' : '集中';
       const intensity = redTotal >= 10 ? '濃厚' : redTotal >= 5 ? '強め' : redTotal >= 2 ? 'じわ熱' : '微熱';
-      const reality = redTotal > yellowTotal + 1 ? '現実寄り' : yellowTotal > redTotal + 1 ? '妄想寄り' : '境界ゆらぎ';
+      const reality = redTotal > yellowTotal ? '現実寄り' : yellowTotal > redTotal ? '妄想寄り' : '境界ゆらぎ';
       const boundary = blueTotal >= 5 ? '拒否ライン明確' : blueTotal === 0 ? '拒否ライン未提出' : '拒否ライン穏やか';
-      const contradictions = detectContradictions(picks);
-      return {activeCats, redTotal, yellowTotal, blueTotal, responseRate, focus, intensity, reality, boundary, contradictions};
-    }
 
-    function hasPick(picks, names, color){
-      const list = color === 'red' ? picks.red : color === 'yellow' ? picks.yellow : picks.blue;
-      return list.some(x => names.includes(x.item));
-    }
-
-    function detectContradictions(picks){
-      const notes = [];
-      if(hasPick(picks, ['奴隷','足で踏まれる','土下座','最下層奉仕'], 'red') && hasPick(picks, ['ご奉仕','あまあま','首輪（リード）'], 'red')){
-        notes.push('下に置かれたい欲と、甘く扱われたい欲が同時に出ています。つまり乱暴に雑にされたいのではなく、選ばれた上で落とされたいタイプです。');
-      }
-      if(hasPick(picks, ['絶頂管理','行動報告','下着管理','睡眠管理','服装管理'], 'red') && hasPick(picks, ['焦らし','寸止め','束縛'], 'red')){
-        notes.push('管理されたい欲と焦らされたい欲が重なっています。あなたは自由を奪われること自体より、相手の意識がずっと自分に向いている状態に弱いです。');
-      }
-      if(hasPick(picks, ['ネカフェでのプレイ','車中プレイ','露出度の高い衣装','公衆での羞恥会話'], 'red') && hasPick(picks, ['あまあま','ご奉仕'], 'red')){
-        notes.push('背徳感と甘さが混ざっています。危うい場所で、優しく逃げ道を塞がれるような空気に惹かれやすいです。');
-      }
-      if(hasPick(picks, ['口枷','貸し出し','即ハメ','生ハメ'], 'red') && hasPick(picks, ['言葉責め','首輪（リード）','しつけ'], 'red')){
-        notes.push('言葉で役割を与えられるほど、身体側のスイッチが入りやすい傾向です。あなたは行為そのものより「そう扱われる意味」に反応します。');
-      }
-      if(hasPick(picks, ['飲尿','浴尿','体液','母乳'], 'red') && hasPick(picks, ['匂いザーメン中毒','アナル開発'], 'red')){
-        notes.push('かなり感覚接触寄りです。綺麗な理屈より、匂い・体温・湿度のような逃げられないリアルさに引き寄せられます。');
-      }
-      if(hasPick(picks, ['寝取られ','浮気SEX','不倫','彼氏とSEX禁止'], 'red')){
-        notes.push('背徳愛の反応は、単なる刺激ではなく「自分の中の優先順位を壊される感覚」に近いです。理性が止めるほど、感情が燃えやすいタイプです。');
-      }
-      return notes;
+      return {activeCats, redTotal, yellowTotal, blueTotal, responseRate, focus, intensity, reality, boundary};
     }
 
     function archetype(top, second, info){
-      const focusWord = {
-        '横断':'多面',
-        '混合':'二重',
-        '集中':'深層'
+      const names = {
+        '最下層マン':['奉仕奉納のミルククラウン','従属のビロード・サーヴァント','跪きのロイヤル・ハート'],
+        '被虐マン':['刺激追憶のローズ・スキン','境界で震えるスパイス・ミューズ','痛み変換のサイレント・ビート'],
+        'オナホマン':['欲の輪郭を溶かすハニードール','快楽吸収のベルベット・ドール','用途化のピンク・トランス'],
+        '表露マン':['羞恥発光のルミナス・ミラー','視線燃焼のグロウ・マスカレード','露わ語りのクリスタル・リップ'],
+        '管理マン':['規律快感のシルク・レジャー','支配設計のローズ・ルーラー','管理陶酔のラベンダー・ルーチン'],
+        'ガチボコマン':['衝動直撃のスカーレット・パルス','刺激渇望のワイルド・フレア','熱痛融合のクリムゾン・リズム'],
+        '主従マン':['主従契約のベル・インプリント','序列奉納のクラウン・バインド','支配帰属のサイレント・オース'],
+        '首輪マン':['首元恋情のサテン・コラール','束ねられ願望のチョーカー・ブルーム','首輪陶酔のムーン・レイ'],
+        'フェチマン':['感覚蒐集のアフェクション・ドール','細部偏愛のミスティック・コレクター','質感酩酊のスウィート・サンプラー'],
+        '露出マン':['背徳灯火のネオン・ヴェール','見られ熱のグラス・フレア','羞恥点火のナイト・シグナル'],
+        '背徳愛マン':['禁断浸透のブラックチェリー・キス','背徳情熱のミッドナイト・リリー','逸脱恋情のダークローズ・ワルツ']
+      };
+      const list = names[top.cat] || ['複合欲求のオラクル・ドール'];
+      const idx = (info.redTotal + info.activeCats + top.score + second.score) % list.length;
+      return profileTitlePrefix(info, allItems()) + list[idx];
+    }
+
+    function openingSentence(top, second, third, info){
+      const focusPhrase = {
+        '横断':'ひとつの型に収まりきらず、気分より“空気”と“関係性”で火がつく',
+        '混合':'複数のスイッチを持ち、相手や流れで顔つきが変わる',
+        '集中':'好きなものにはまっすぐ深く沈み込み、雑に触られると急に冷めやすい'
       }[info.focus];
-
-      const realityWord = {
-        '現実寄り':'実感型',
-        '妄想寄り':'幻想型',
-        '境界ゆらぎ':'境界型'
+      const realityPhrase = {
+        '現実寄り':'想像だけで終わらず、現実の手触りまで求めやすい',
+        '妄想寄り':'現実に全部を持ち込むより、シチュエーションとして味わうことで輝く',
+        '境界ゆらぎ':'その日の心の温度で、妄想にも現実にも揺れやすい'
       }[info.reality];
-
-      const map = {
-        '最下層マン':'献身フェロモン吸収体',
-        '被虐マン':'痛覚変換のミューズ',
-        'オナホマン':'快楽用途化ドール',
-        '表露マン':'羞恥発光マスカレード',
-        '管理マン':'支配設計のルール中毒',
-        'ガチボコマン':'衝動直撃のスカーレット',
-        '主従マン':'主従契約のサイレントオース',
-        '首輪マン':'首輪陶酔のムーンレイ',
-        'フェチマン':'細部偏愛コレクター',
-        '露出マン':'背徳灯火のネオンヴェール',
-        '背徳愛マン':'禁断浸透のブラックチェリー'
-      };
-      return focusWord + '・' + realityWord + 'の' + (map[top.cat] || '欲望オラクル');
+      const mood = profileMood();
+      return `あなたの中でいちばん強く光っているのは「${top.cat}」の気配。そこに「${second.cat}」「${third.cat}」が重なり、${focusPhrase}タイプです。${realityPhrase}ため、“何が好きか”よりも“誰に、どんな空気で触れられるか”で結果が大きく変わります。${mood.sm}。${mood.gender}。`;
     }
 
-    function categoryMood(cat){
-      const map = {
-        '最下層マン':'「好きな人のために落ちること」を、ただの屈辱ではなく愛情表現として変換する領域です。',
-        '被虐マン':'痛みや負荷を、自分の存在を強く感じるための刺激に変換する領域です。',
-        'オナホマン':'役割を与えられ、用途として扱われることで、思考より先に身体が反応する領域です。',
-        '表露マン':'隠したい顔をあえて見られることで、羞恥と興奮が混ざる領域です。',
-        '管理マン':'自由を奪われることより、相手の意識に管理され続けることに価値を感じる領域です。',
-        'ガチボコマン':'強い刺激で日常の自分を壊し、別のモードへ切り替わる領域です。',
-        '主従マン':'対等さを一度降りて、相手との序列そのものに安心や興奮を見つける領域です。',
-        '首輪マン':'首元・言葉・約束で、見えない所有感を身体に刻みたい領域です。',
-        'フェチマン':'行為そのものより、質感・匂い・部位・小物などの細部で火がつく領域です。',
-        '露出マン':'人目・場所・危うさが、普通の時間を特別な場面に変える領域です。',
-        '背徳愛マン':'いけないと分かっている感情ほど濃くなり、愛情と罪悪感が混ざる領域です。'
-      };
-      return map[cat] || 'あなたの中の特殊なスイッチが反応している領域です。';
+
+
+    function categoryFlavor(top){
+      if(['最下層マン','主従マン','管理マン'].includes(top.cat)) return 'role';
+      if(['首輪マン','被虐マン','ガチボコマン'].includes(top.cat)) return 'stim';
+      if(['露出マン','表露マン','背徳愛マン'].includes(top.cat)) return 'taboo';
+      return 'fetish';
     }
 
-    function itemReading(picks, top){
-      const reds = picks.red.map(x => x.item);
-      const yellows = picks.yellow.map(x => x.item);
-      const blues = picks.blue.map(x => x.item);
+    function tailoredAiComment(top, second, third, info, picks, base){
+      const depth = smDepthLabel(info, picks);
+      const flavor = categoryFlavor(top);
 
-      const redSentence = reds.length
-        ? '赤にした「' + reds.slice(0,4).join('」「') + '」は、あなたが頭で考える前に反応しやすい核です。ここは冗談で済ませているようで、実はかなり本音に近い部分です。'
-        : '赤い瓶が少ないため、今はまだ本音を隠している状態です。自分でも様子を見ながら、どこまで出していいか測っているように見えます。';
+      const flavorLine = {
+        role: 'あなたは、快楽そのものより「関係性の中で自分の位置が決まる瞬間」に強く反応します。',
+        stim: 'あなたは、刺激の強さそのものより「普段の自分がほどける瞬間」に反応しやすいタイプです。',
+        taboo: 'あなたは、秘密・背徳・見られる緊張感が混ざったときに、感情の熱が一段上がります。',
+        fetish: 'あなたは、派手な展開よりも、言葉・質感・役割・細部の刺さりで深く火がつくタイプです。'
+      }[flavor];
 
-      const yellowSentence = yellows.length
-        ? '黄色の「' + yellows.slice(0,4).join('」「') + '」は、現実よりも妄想の中で育つ領域です。すぐ実行したいというより、想像している時間そのものが甘いタイプです。'
-        : '黄色が少ないので、曖昧な妄想よりも、好き嫌いをはっきり分けたい傾向があります。';
+      let smLine = '';
+      if(smTrait === 'S'){
+        smLine = depth.includes('ドS') || depth.includes('強S')
+          ? 'S気質はかなり濃いめで、ただ攻めたいというより、相手の反応を観察しながら一番効く場所を探す支配欲があります。'
+          : 'S気質は出ていますが、押し切るタイプではなく、相手の反応を見て少しずつ主導権を握るタイプです。';
+      } else if(smTrait === 'M'){
+        smLine = depth.includes('ドM') || depth.includes('強M')
+          ? 'M気質はかなり濃いめで、安心できる相手に主導権を預けた瞬間、普段の自分とのギャップごと深く沈みやすいです。'
+          : 'M気質は出ていますが、誰にでも委ねたいわけではなく、信頼できる相手にだけ甘さが開くタイプです。';
+      } else if(smTrait === 'Mix'){
+        smLine = 'S/M両面型なので、相手の温度や立場で攻めたい欲と委ねたい欲が反転します。固定された役より、関係性で変化する方が刺さります。';
+      } else {
+        smLine = 'S/M気質が未選択なので、今は瓶の傾向を中心に読んでいます。';
+      }
 
-      const blueSentence = blues.length
-        ? '青にした「' + blues.slice(0,4).join('」「') + '」は、あなたの境界線です。ここを軽く扱う相手には、たとえ他が刺さっていても心が閉じやすいでしょう。'
-        : '青が少ない場合、拒否ラインがまだ表に出ていません。何でも受け入れられるというより、まだ自分のNGを言語化していない可能性があります。';
+      let genderLine = '';
+      if(genderTrait === 'male' && smTrait === 'M'){
+        genderLine = '男性として見ると、外では強く保ちたい自分と、内側では崩されたい自分の差がかなり魅力になります。弱さではなく、信頼した相手にだけ渡す特別な裏側です。';
+      } else if(genderTrait === 'female' && smTrait === 'S'){
+        genderLine = '女性として見ると、可愛さや柔らかさの奥に、相手を動かしたい采配欲が隠れています。強さを前面に出すより、甘く主導権を握る方が似合います。';
+      } else if(genderTrait === 'male' && smTrait === 'S'){
+        genderLine = '男性として見ると、独占欲や守りたい感覚がS気質に混ざります。ただ命令したいのではなく、相手が自分に染まっていく過程に満たされやすいでしょう。';
+      } else if(genderTrait === 'female' && smTrait === 'M'){
+        genderLine = '女性として見ると、雑に扱われたいのではなく、大切に選ばれたうえで委ねたいタイプです。安心感があるほど、深い甘さが出ます。';
+      } else if(genderTrait === 'male' && smTrait === 'Mix'){
+        genderLine = '男性として見ると、主導したい場面と預けたい場面の切り替わりがはっきり出やすいです。相手が強いほど、普段とは逆の顔が出ることがあります。';
+      } else if(genderTrait === 'female' && smTrait === 'Mix'){
+        genderLine = '女性として見ると、甘えたい日と試したい日が入れ替わるタイプです。相手が単調だと飽きやすく、空気を読んで変化できる人に弱いでしょう。';
+      } else if(genderTrait === 'male'){
+        genderLine = '男性として見ると、表向きの強さと内側の欲の差が診断に出ています。どちらか一方ではなく、そのギャップが魅力になります。';
+      } else if(genderTrait === 'female'){
+        genderLine = '女性として見ると、安心感・特別扱い・自分だけを見てほしい感覚が、選んだ瓶の奥に混ざっています。';
+      } else {
+        genderLine = '性別に寄せすぎずに見ると、あなたは相手との空気でスイッチが変わる関係性重視タイプです。';
+      }
 
-      return {redSentence, yellowSentence, blueSentence};
+      return `${flavorLine} ${smLine} ${genderLine}`;
     }
 
-    function desireAxis(top, second, info){
-      if(['最下層マン','主従マン','管理マン','首輪マン'].includes(top.cat)){
-        return 'あなたの中心には「特別に選ばれて、相手のルールの中に入ること」への憧れがあります。支配されたいというより、相手の世界に居場所を与えられたい欲です。';
+    function deepBlocks(top, second, third, info, picks){
+      const redNames = picks.red.slice(0,6).map(x=>x.item).join('、') || 'まだなし';
+      const yellowNames = picks.yellow.slice(0,6).map(x=>x.item).join('、') || 'まだなし';
+      const mood = profileMood();
+      const one = profileOneLine();
+
+      let t1='', p1='', t2='', p2='', ai='';
+      if(top.cat === '最下層マン' || top.cat === '主従マン' || top.cat === '管理マン'){
+        t1 = smTrait === 'S' ? '支配の中にある奉仕欲' : '尽くすことで燃える心';
+        p1 = `あなたの欲は、ただ受け身になることではなく「相手の輪郭の中に自分を置くこと」で色づきます。${top.cat}が最上位に出ているのは、快楽そのものよりも“関係性の濃さ”に興奮しやすい証拠。${one}`;
+        t2 = '甘えと従属の境界';
+        p2 = `ただ従いたい、ただ支配したい、という単純なものではありません。赤が出た「${redNames}」には、“私だけを選んで扱ってほしい”という濃い感情が混ざっています。${mood.gender}`;
+        ai = `あなたは、表面的にはおだやかでも、心の深いところで“役割を与えられる快感”をかなり美しく育てている人です。荒々しい刺激だけでは足りず、相手との呼吸が噛み合った瞬間に一気に沼るタイプ。${mood.sm}。`;
+      } else if(top.cat === '首輪マン' || top.cat === '被虐マン' || top.cat === 'ガチボコマン'){
+        t1 = smTrait === 'S' ? '相手を崩す刺激スイッチ' : '刺激に変わる心理スイッチ';
+        p1 = `あなたは“強さ”そのものより、普段の自分や相手が崩れる瞬間に甘い陶酔を感じやすいようです。${top.cat}が上位に来る人は、圧・拘束・言葉といった外側の刺激を、内側の高まりへ変換する力が強め。${one}`;
+        t2 = '理性を脱ぐ瞬間';
+        p2 = `赤が出た「${redNames}」は、あなたの中の“我慢がほどける入口”です。黄色が多いなら「${yellowNames}」のように、実行よりも想像の濃さで楽しむ一面もあります。${mood.gender}`;
+        ai = `あなたの魅力は、ただ刺激に強いことではありません。刺激を通じて、自分でも知らなかった表情を引き出せるところにあります。だからこそ、雑に煽る相手より、反応を丁寧に見てくれる相手と相性がいいでしょう。${mood.sm}。`;
+      } else if(top.cat === '露出マン' || top.cat === '表露マン' || top.cat === '背徳愛マン'){
+        t1 = '見られることで濃くなる感情';
+        p1 = `あなたの欲は密室だけで完成せず、“見られる・知られる・少し危うい”という空気で一段深く色づきます。${top.cat}が上位にある人は、刺激を求めているようでいて、本当は“いつもと違う自分になる瞬間”に強く惹かれがちです。${one}`;
+        t2 = '背徳と愛情のブレンド';
+        p2 = `赤が出た「${redNames}」には、単なる背徳ではなく、“誰と、どんな関係でそれをするか”が映っています。あなたはスリルだけで動くタイプではなく、感情の熱とシーンの雰囲気が重なったときに一番高まりやすいでしょう。${mood.gender}`;
+        ai = `あなたの中には、人に見せない顔をあえて灯したくなる華やかな影があります。それは軽さではなく、むしろ“愛され方の演出”へのこだわり。雰囲気に酔える相手ほど相性が伸びます。${mood.sm}。`;
+      } else {
+        t1 = '細部から火がつく偏愛気質';
+        p1 = `あなたは、分かりやすい派手さよりも“細部の刺さり”を大事にするタイプです。${top.cat}が高い人は、質感・役割・言葉・小道具・雰囲気など、細やかな要素の重なりで一気にスイッチが入ります。${one}`;
+        t2 = '愛し方に宿るクセ';
+        p2 = `赤の「${redNames}」と黄色の「${yellowNames}」を見ると、あなたは全部を同じ温度で好きになるのではなく、“これだけは刺さる”という宝石みたいな好みをいくつか持っています。${mood.gender}`;
+        ai = `あなたの欲は雑にまとめると見失われます。けれど、丁寧に言葉にしていくほど独自の輪郭が見えてくるタイプ。深く知れば知るほど味が出る、かなり“語れる性癖”を持っている人です。${mood.sm}。`;
       }
-      if(['被虐マン','ガチボコマン'].includes(top.cat)){
-        return 'あなたの中心には「普通の自分を一度壊されたい」という熱があります。強い刺激は目的ではなく、理性を脱いで別の自分に変わるための扉です。';
-      }
-      if(['露出マン','表露マン','背徳愛マン'].includes(top.cat)){
-        return 'あなたの中心には「隠している顔を、あえて見つけられたい」という欲があります。見られる怖さと、見つけてもらう嬉しさが同じ場所で燃えています。';
-      }
-      if(['フェチマン','オナホマン'].includes(top.cat)){
-        return 'あなたの中心には「細部に意味を宿らせる力」があります。言葉ひとつ、部位ひとつ、扱われ方ひとつで、普通の場面が一気に特別なスイッチに変わります。';
-      }
-      return 'あなたの欲は単純な一語では切れません。相手・空気・関係性が揃った瞬間に、急に輪郭を持つタイプです。';
+      ai = tailoredAiComment(top, second, third, info, picks, ai);
+      return {t1,p1,t2,p2,ai};
     }
 
-    function shadowComment(info, picks){
-      if(info.focus === '横断'){
-        return 'あなたは「これだけが好き」と言い切れない人です。むしろ複数の小さなスイッチが散らばっていて、相手の出方次第で思わぬ瓶が赤くなります。だから自分でも、急に刺さって戸惑うことがありそうです。';
-      }
-      if(info.focus === '集中'){
-        return 'あなたはかなり一点突破型です。広く何でも好きなわけではなく、刺さる場所に入った瞬間だけ深く沈みます。外す相手には冷めやすい反面、当ててくる相手には弱いです。';
-      }
-      return 'あなたは矛盾を持ったタイプです。甘やかされたいのに壊されたい、守られたいのに乱されたい。どちらか片方では物足りず、相反する扱いが混ざったときに一番深く反応します。';
-    }
-
-    function partnerType(top, second, info){
-      if(['最下層マン','主従マン','管理マン','首輪マン'].includes(top.cat)){
-        return '言葉は穏やかなのに、主導権だけは絶対に離さない支配上手';
-      }
-      if(['被虐マン','ガチボコマン'].includes(top.cat)){
-        return '反応を見ながら強弱を調整できる、冷静で観察力のあるリード型';
-      }
-      if(['露出マン','表露マン','背徳愛マン'].includes(top.cat)){
-        return 'ムード作りが上手く、罪悪感すら甘く演出できる共犯者タイプ';
-      }
-      if(['フェチマン','オナホマン'].includes(top.cat)){
-        return '細かい癖を面白がって、あなた専用の扱い方を覚えてくれる研究者タイプ';
-      }
-      return 'あなたの反応を急かさず、でも逃げ道は少しずつ塞いでくる余裕型';
-    }
 
     function luckyItem(top, info){
       const map = {
-        '最下層マン':'細いシルクのリボン',
-        '被虐マン':'サテンのアイマスク',
-        'オナホマン':'つやのあるリップ',
-        '表露マン':'大きめの鏡',
-        '管理マン':'黒いチョーカー',
-        'ガチボコマン':'重めの香水',
-        '主従マン':'鍵モチーフのアクセ',
-        '首輪マン':'首元が綺麗に見える服',
-        'フェチマン':'香り付きボディローション',
-        '露出マン':'薄手の羽織り',
-        '背徳愛マン':'ワイン色の小物'
+        '最下層マン':['シルクのリボン','淡い香りのハンドクリーム','白いオーバーサイズシャツ'],
+        '被虐マン':['サテンのアイマスク','細いレザーブレスレット','深色のルームウェア'],
+        'オナホマン':['つや感のあるリップ','ピンクゴールドのアクセ','やわらかいボディミスト'],
+        '表露マン':['大きめの鏡','透け感のあるトップス','ネーム入り小物'],
+        '管理マン':['手帳型メモ','チョーカー','黒のルームソックス'],
+        'ガチボコマン':['黒いアイマスク','重めの香水','レザー小物'],
+        '主従マン':['細いチョーカー','鍵モチーフのアクセ','ベルベットのリボン'],
+        '首輪マン':['シルクのチョーカー','首元がきれいに見える服','パールのアクセ'],
+        'フェチマン':['質感のいい手袋','サテンのポーチ','香り付きボディローション'],
+        '露出マン':['薄手のカーディガン','香り立つヘアミスト','ヒールのある靴'],
+        '背徳愛マン':['ワイン色の小物','レース素材のインナー','夜っぽい香水']
       };
-      return map[top.cat] || '小さな秘密の持ち物';
+      const list = map[top.cat] || ['シルクの小物'];
+      return list[(info.activeCats + info.redTotal) % list.length];
     }
+
+    function partnerType(top, second, info){
+      const flavor = categoryFlavor ? categoryFlavor(top) : 'fetish';
+      const depth = smDepthLabel(info, allItems());
+
+      const baseByFlavor = {
+        role: {
+          maleS: '素直に反応しながらも簡単には崩れず、あなたの独占欲と育てたい欲をくすぐる相手',
+          maleM: '外では立ててくれて、二人きりでは静かに主導権を握ってくれる包容力のある相手',
+          maleMix: '普段は対等に遊べて、空気が変わると攻守を自然に入れ替えられる相手',
+          femaleS: '甘え上手なのに芯があり、あなたの小悪魔的な主導に可愛く反応してくれる相手',
+          femaleM: '強引すぎず、言葉と空気でじわっと関係性を深めてくれる包容型パートナー',
+          femaleMix: '甘やかす日と試される日をどちらも楽しめる、温度調整のうまい相手',
+          other: '役割の固定に縛られず、二人だけのルールを一緒に作れる相手'
+        },
+        stim: {
+          maleS: '強がる相手の反応を見ながら、少しずつ限界を探らせてくれる相手',
+          maleM: 'あなたの強がりを見抜き、急かさず深いところまで導いてくれる落ち着いた相手',
+          maleMix: '刺激の強弱を一緒に遊べて、主導も委託も切り替えられる相手',
+          femaleS: '恥ずかしがる反応を見せつつ、あなたの支配欲を自然に引き出してくれる相手',
+          femaleM: '安心感を作りながら、あなたが委ねたくなる圧を静かに持っている相手',
+          femaleMix: '攻めたい時も甘えたい時も受け止め、刺激の温度を合わせられる相手',
+          other: '強さと優しさの配分を、その場で調整できる観察力のある相手'
+        },
+        taboo: {
+          maleS: '秘密を共有しながら、あなたの独占欲と演出欲を満たしてくれる共犯者タイプ',
+          maleM: '普段の顔を崩さず、二人だけの空気で静かに背徳感を深めてくれる相手',
+          maleMix: 'スリルと安心感の両方を扱えて、攻守の温度を場面で変えられる相手',
+          femaleS: '可愛く見せながら主導権を渡さず、相手の羞恥や反応を引き出せる共犯者',
+          femaleM: '大切に選んだうえで、秘密めいた空気に連れていってくれるムード型パートナー',
+          femaleMix: '甘さと背徳を行き来でき、日によって違う顔を楽しませてくれる相手',
+          other: '秘密・雰囲気・距離感を丁寧に演出できる共犯者タイプ'
+        },
+        fetish: {
+          maleS: '細かい反応を見せてくれて、あなたの観察欲と主導欲を刺激してくれる相手',
+          maleM: 'あなたの細かい好みを否定せず、静かに拾って深めてくれる相手',
+          maleMix: '細部の好みを一緒に研究しながら、攻めと受けを自由に入れ替えられる相手',
+          femaleS: 'あなたのこだわりに気づき、可愛く反応しながら主導権を預けてくれる相手',
+          femaleM: 'あなたの小さな好みまで覚えて、特別扱いとして返してくれる相手',
+          femaleMix: '細かなツボを共有しながら、甘さといたずらを両方楽しめる相手',
+          other: 'あなたの細かな好みを面白がり、一緒に深掘りしてくれる共犯型パートナー'
+        }
+      };
+
+      let key = 'other';
+      if(genderTrait === 'male' && smTrait === 'S') key = 'maleS';
+      else if(genderTrait === 'male' && smTrait === 'M') key = 'maleM';
+      else if(genderTrait === 'male' && smTrait === 'Mix') key = 'maleMix';
+      else if(genderTrait === 'female' && smTrait === 'S') key = 'femaleS';
+      else if(genderTrait === 'female' && smTrait === 'M') key = 'femaleM';
+      else if(genderTrait === 'female' && smTrait === 'Mix') key = 'femaleMix';
+
+      let text = (baseByFlavor[flavor] || baseByFlavor.fetish)[key] || (baseByFlavor[flavor] || baseByFlavor.fetish).other;
+
+      if(depth.includes('ドS')){
+        text += '。特に、ただ従うだけでなく、反応の変化を見せてあなたの支配欲を育ててくれる相手が合います';
+      } else if(depth.includes('ドM')){
+        text += '。特に、雑に扱うのではなく、安心させたうえで逃げ道を少しずつ塞いでくれる相手が合います';
+      } else if(depth.includes('強S')){
+        text += '。特に、あなたの主導を怖がらず、むしろ楽しんで反応してくれる相手が合います';
+      } else if(depth.includes('強M')){
+        text += '。特に、言葉と雰囲気であなたをほどいてくれる、余裕のある相手が合います';
+      } else if(smTrait === 'Mix'){
+        text += '。特に、日によって攻守を入れ替えられる柔軟な相手が合います';
+      }
+
+      return text + '。';
+    }
+
 
     function parameterBars(norm, picks, info){
       const cat = c => (norm.find(x => x.cat === c)?.score || 0);
-      const devotion = Math.min(100, Math.round((cat('最下層マン')*0.35 + cat('主従マン')*0.28 + cat('管理マン')*0.22 + cat('首輪マン')*0.15)));
-      const shame = Math.min(100, Math.round((cat('表露マン')*0.35 + cat('露出マン')*0.33 + cat('背徳愛マン')*0.32)));
-      const stimulation = Math.min(100, Math.round((cat('被虐マン')*0.38 + cat('ガチボコマン')*0.34 + cat('首輪マン')*0.28)));
-      const fetish = Math.min(100, Math.round((cat('フェチマン')*0.45 + cat('オナホマン')*0.35 + cat('表露マン')*0.20)));
-      const surrender = Math.min(100, Math.round((devotion*0.45 + stimulation*0.25 + shame*0.15 + fetish*0.15)));
+      const devotion = Math.min(100, Math.round((cat('最下層マン')*0.45 + cat('主従マン')*0.35 + cat('管理マン')*0.20)));
+      const shame = Math.min(100, Math.round((cat('表露マン')*0.45 + cat('露出マン')*0.35 + cat('背徳愛マン')*0.20)));
+      const stimulation = Math.min(100, Math.round((cat('被虐マン')*0.4 + cat('ガチボコマン')*0.35 + cat('首輪マン')*0.25)));
+      const fetish = Math.min(100, Math.round((cat('フェチマン')*0.5 + cat('オナホマン')*0.3 + cat('表露マン')*0.2)));
+      const reality = Math.min(100, Math.max(0, Math.round((info.redTotal*8) - (info.yellowTotal*3) + 40)));
       return [
-        {name:'奉仕・帰属欲', value:devotion, note:'相手の世界に自分の居場所を作りたい欲'},
-        {name:'羞恥・背徳熱', value:shame, note:'隠したい顔を見つけられたい熱'},
-        {name:'刺激受容性', value:stimulation, note:'圧や強さを快感へ変換する力'},
-        {name:'偏愛濃度', value:fetish, note:'細部・質感・役割への刺さりやすさ'},
-        {name:'自己委託度', value:surrender, note:'自分の主導権を相手へ預けたい深さ'}
+        {name:'奉仕・帰属欲', value:devotion, note:'相手の役割に自分を溶かしたい気配'},
+        {name:'羞恥・背徳熱', value:shame, note:'見られる・危うい空気で色づく高まり'},
+        {name:'刺激受容性', value:stimulation, note:'強さや圧を快感へ変換する力'},
+        {name:'偏愛濃度', value:fetish, note:'細部や質感に深く刺さるこだわり'},
+        {name:'現実移行率', value:reality, note:'妄想より実感に寄りやすい温度'}
       ];
     }
 
@@ -746,14 +1188,18 @@
       const ranked = normalizedScores(categoryScores());
       const active = ranked.filter(r => r.selected > 0);
       const picks = allItems();
-
+      const totalDone = picks.red.length + picks.yellow.length + picks.blue.length;
       if(!active.length){
         return {
           type:'未診断',
           hint:'瓶を選んでください',
           html:'まだ瓶が選ばれていません。',
           bars:ranked,
-          picks
+          picks,
+          info:null,
+          top:{cat:'未診断',score:0},
+          second:{cat:'未診断',score:0},
+          third:{cat:'未診断',score:0}
         };
       }
 
@@ -762,22 +1208,23 @@
       const third = active[2] || active[1] || active[0];
       const info = patternInfo(ranked, picks);
       const title = archetype(top, second, info);
+      const summary = openingSentence(top, second, third, info);
+      const deep = deepBlocks(top, second, third, info, picks);
       const params = parameterBars(ranked, picks, info);
-      const itemText = itemReading(picks, top);
-      const contradictions = info.contradictions.length ? info.contradictions : [shadowComment(info, picks)];
-      const warning = info.responseRate < 15 ? `※回答率は ${info.responseRate}% です。まだ少なめなので、これは“今見えている欲の影”から読む暫定鑑定です。` : '';
-
-      const opening = `今回の診断では、あなたの中心にあるのは「${top.cat}」の気配です。ただし単純にそのカテゴリが好きというより、${categoryMood(top.cat)} そこへ「${second.cat}」と「${third.cat}」が重なり、欲の出方にかなり独特な陰影が出ています。`;
+      const lucky = luckyItem(top, info);
+      const partner = partnerType(top, second, info);
+      const warning = info.responseRate < 15 ? `※回答率は ${info.responseRate}% です。まだ少なめなので、今の結果は“暫定オラクル”です。` : '';
 
       const html = `
         <div class="oracle-card">
           <div class="oracle-inner">
             <div class="oracle-kicker">【性癖鑑定結果】</div>
             <div class="oracle-main-title">${escapeHtml(title)}</div>
-            <p class="oracle-summary">${escapeHtml(opening)}</p>
-            ${warning ? `<p style="margin:0 0 10px;color:#f9d7dc;font-weight:800">${escapeHtml(warning)}</p>` : ''}
+            <div class="profile-chips"><span class="profile-chip">${escapeHtml(smLabel())}</span><span class="profile-chip">${escapeHtml(genderLabel())}</span><span class="profile-chip">${escapeHtml(smDepthLabel(info, picks))}</span></div>
+            <p class="oracle-summary">${escapeHtml(summary)}</p>
+            ${warning ? `<p style="margin:0 0 10px;color:#f9d7dc;font-weight:700">${escapeHtml(warning)}</p>` : ''}
 
-            <div class="section-label">📊 欲望パラメーター</div>
+            <div class="section-label">📊 気質パラメーター</div>
             <div class="mini-stats">
               ${params.map(p => `
                 <div class="mini-row">
@@ -787,64 +1234,36 @@
                 </div>`).join('')}
             </div>
 
-            <div class="section-label">🔮 深層心理鑑定</div>
+            <div class="section-label">🔎 深層心理分析</div>
             <div class="insight-grid">
               <div class="insight-box">
-                <h4>本質：愛され方に条件がある人</h4>
-                <p>${escapeHtml(desireAxis(top, second, info))}</p>
+                <h4>${escapeHtml(deep.t1)}</h4>
+                <p>${escapeHtml(deep.p1)}</p>
               </div>
               <div class="insight-box">
-                <h4>赤い瓶の読み取り</h4>
-                <p>${escapeHtml(itemText.redSentence)}</p>
+                <h4>${escapeHtml(deep.t2)}</h4>
+                <p>${escapeHtml(deep.p2)}</p>
               </div>
               <div class="insight-box">
-                <h4>黄色い瓶と青い瓶の読み取り</h4>
-                <p>${escapeHtml(itemText.yellowSentence)} ${escapeHtml(itemText.blueSentence)}</p>
+                <h4>性別×気質の読み取り</h4>
+                <p>${escapeHtml(genderSmReading(info, picks))}</p>
               </div>
               <div class="insight-box">
-                <h4>隠れた矛盾</h4>
-                <p>${escapeHtml(contradictions[0])}</p>
-              </div>
-              <div class="insight-box">
-                <h4>🤖 AI辛口診断コメント</h4>
-                <p>${escapeHtml(makeSharpComment(top, second, info, picks))}</p>
+                <h4>🤖 AI診断コメント</h4>
+                <p>${escapeHtml(deep.ai)}</p>
               </div>
             </div>
 
             <div class="bottom-picks">
-              <div class="pick"><div class="cap">✨ ラッキーアイテム</div><div class="txt">${escapeHtml(luckyItem(top, info))}</div></div>
-              <div class="pick"><div class="cap">🤝 相性の良いタイプ</div><div class="txt">${escapeHtml(partnerType(top, second, info))}</div></div>
+              <div class="pick"><div class="cap">✨ ラッキーアイテム</div><div class="txt">${escapeHtml(lucky)}</div></div>
+              <div class="pick"><div class="cap">🤝 相性の良いタイプ</div><div class="txt">${escapeHtml(partner)}</div></div>
             </div>
           </div>
         </div>`;
 
-      return {
-        type:title,
-        hint:`最上位：${top.cat}｜相対スコア100`,
-        html,
-        bars:ranked,
-        picks,
-        top,
-        second,
-        third,
-        info
-      };
-    }
-
-    function makeSharpComment(top, second, info, picks){
-      if(info.redTotal === 0){
-        return 'まだ本性を出していません。表向きは様子見ですが、黄色い瓶があるなら妄想の中ではもう何度か踏み込んでいます。';
-      }
-      if(info.focus === '横断'){
-        return 'あなたは「私はこれが好き」と綺麗に説明できるタイプではありません。むしろ、その場の空気と相手の言葉で急にスイッチが入る危険な雑食性があります。自分では軽く選んだつもりでも、赤の散らばり方にかなり本音が出ています。';
-      }
-      if(info.focus === '集中'){
-        return 'あなたは好みが狭いぶん、刺さった時の沈み方が深いです。雑な相手にはまったく反応しないのに、正しい角度で触れてくる相手には一気に弱くなるタイプです。';
-      }
-      if(info.boundary === '拒否ライン未提出'){
-        return '青が少ないのは、心が広いというより、まだ自分の拒否ラインを他人に見せていない状態です。好きなものを語る前に、嫌なものを言える相手かどうかを見ています。';
-      }
-      return 'あなたの欲は単純ではありません。甘さと支配、羞恥と安心、妄想と現実が同時に走っています。だからこそ、強引なだけの相手では足りず、あなたの揺れを読める相手に一番弱いでしょう。';
+      const type = title;
+      const hint = `最上位：${top.cat}｜相対スコア100`;
+      return {type,hint,html,bars:ranked,picks,top,second,third,info};
     }
 
     function updateResult(){
@@ -877,18 +1296,21 @@
         return;
       }
       const topReds = result.picks.red.slice(0,6).map(x => x.item).join('、') || 'なし';
+      const topYellows = result.picks.yellow.slice(0,6).map(x => x.item).join('、') || 'なし';
       const text = [
         '性癖の瓶メーカー診断結果',
         '',
         'タイプ：' + result.type,
-        '中心：' + result.top.cat + ' / ' + result.second.cat,
+        '気質：' + smLabel(),
+        '性別：' + genderLabel(),
+        '推定：' + smDepthLabel(result.info, result.picks),
+        '推定：' + smDepthLabel(result.info, result.picks),
+        '強め：' + result.top.cat + ' / ' + result.second.cat,
         '赤い瓶：' + topReds,
+        '黄色い瓶：' + topYellows,
         '相性の良いタイプ：' + partnerType(result.top, result.second, result.info),
         '',
-        'ひとこと：' + makeSharpComment(result.top, result.second, result.info, result.picks),
-        '',
-        'あなたもやってみて',
-        cleanAppUrl(),
+        'ひとこと：' + profileOneLine(),
         '',
         '※成人同士の同意・安全・合法が前提の娯楽用診断'
       ].join('\n');
@@ -916,11 +1338,13 @@
         '性癖の瓶メーカー診断結果',
         '',
         'タイプ：' + result.type,
-        '中心：' + result.top.cat + ' / ' + result.second.cat,
+        '気質：' + smLabel(),
+        '性別：' + genderLabel(),
+        '強め：' + result.top.cat + ' / ' + result.second.cat,
         '赤い瓶：' + topReds,
         '相性の良いタイプ：' + partnerType(result.top, result.second, result.info),
         '',
-        'ひとこと：' + makeSharpComment(result.top, result.second, result.info, result.picks),
+        'ひとこと：' + profileOneLine(),
         '',
         'あなたもやってみて',
         appUrl,
@@ -960,9 +1384,14 @@
 
     function renderPoster(){
       const result = resultMarkup();
-      const redCount = result.picks.red.length;
-      const blueCount = result.picks.blue.length;
-      const done = redCount + result.picks.yellow.length + blueCount;
+      const picks = allItems();
+      const redCount = picks.red.length;
+      const yellowCount = picks.yellow.length;
+      const blueCount = picks.blue.length;
+      const depth = smDepthLabel(result.info, result.picks);
+      const depthText = (result.type === '未診断' || depth === '未診断' || depth === '気質未選択')
+        ? '瓶を選ぶと気質が出ます'
+        : `あなたは${depth}です`;
 
       const colHtml = groups.map(group => `
         <div class="poster-col">
@@ -984,34 +1413,63 @@
           }).join('')}
         </div>`).join('');
 
+      document.getElementById('poster').className = 'poster';
       document.getElementById('poster').innerHTML = `
-        <div class="poster-head">
+        <div class="poster-shot-head">
           <div>
-            <div class="poster-title">性癖の瓶（オラクル鑑定版）</div>
-            <div class="poster-sub">〜あなたの中の赤い瓶、青い瓶を分析します〜</div>
+            <div class="poster-shot-title">性癖の瓶メーカー</div>
+            <div class="poster-shot-sub">赤い瓶・青い瓶 一覧結果</div>
           </div>
-          <div class="poster-legend">
-            <span class="b">青：できない</span>
-            <span class="y">黄：妄想ならあり</span>
-            <span class="r">赤：興奮する</span>
+          <div class="poster-shot-meta">
+            <span>${escapeHtml(smLabel())}</span>
+            <span>${escapeHtml(genderLabel())}</span>
+            <span>赤${redCount}</span>
+            <span>黄${yellowCount}</span>
+            <span>青${blueCount}</span>
           </div>
         </div>
-        <div class="poster-summary">
-          <span>診断タイプ：${escapeHtml(result.type)}</span>
-          <span>${escapeHtml(result.hint)}</span>
-          <span>赤 ${redCount}｜青 ${blueCount}｜入力 ${done}</span>
+
+        <div class="poster-shot-result">
+          <div class="result-box">
+            <div class="cap">診断タイプ</div>
+            <div class="main">${escapeHtml(result.type)}</div>
+          </div>
+          <div class="result-box">
+            <div class="cap">気質結果</div>
+            <div class="main depth">${escapeHtml(depthText)}</div>
+          </div>
         </div>
+
         <div class="poster-grid">${colHtml}</div>
         <div class="poster-foot">
+          <span>赤：興奮する　黄：妄想ならあり　青：できない　白：未入力</span>
           <span>成人同士の同意・安全・合法が前提の娯楽用診断</span>
-          <span>未入力は白、入力結果は青・黄・赤で表示</span>
         </div>`;
     }
+
+
+    document.querySelectorAll('.sm-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        smTrait = btn.dataset.sm;
+        document.querySelectorAll('.sm-btn').forEach(b => b.classList.toggle('active', b === btn));
+        updateResult();
+        renderPoster();
+      });
+    });
+
+    document.querySelectorAll('.gender-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        genderTrait = btn.dataset.gender;
+        document.querySelectorAll('.gender-btn').forEach(b => b.classList.toggle('active', b === btn));
+        updateResult();
+        renderPoster();
+      });
+    });
 
     filterSelect.addEventListener('change', e => { filter = e.target.value; render(); });
     document.getElementById('resetBtn').addEventListener('click', () => {
       Object.keys(state).forEach(key => state[key] = 0);
-      document.getElementById('shareText').value = '診断結果やLINEに貼り付ける文章がここに表示されます。';
+      document.getElementById('shareText').value = '共有文を作成するとここに表示されます。';
       render();
     });
     document.getElementById('shareBtn').addEventListener('click', shareText);
@@ -1027,15 +1485,7 @@
       document.getElementById('screenPanel').scrollIntoView({behavior:'smooth',block:'start'});
     });
     document.getElementById('backBtn').addEventListener('click', () => {
-      document.body.classList.remove('poster-only');
       document.getElementById('screenPanel').classList.add('hidden');
-      document.getElementById('posterOnlyBtn').textContent = 'スクショ専用表示';
-      window.scrollTo({top:0,behavior:'smooth'});
-    });
-    document.getElementById('posterOnlyBtn').addEventListener('click', () => {
-      document.body.classList.toggle('poster-only');
-      document.getElementById('screenPanel').classList.remove('hidden');
-      document.getElementById('posterOnlyBtn').textContent = document.body.classList.contains('poster-only') ? '通常スクショ表示' : 'スクショ専用表示';
       window.scrollTo({top:0,behavior:'smooth'});
     });
     document.getElementById('printBtn').addEventListener('click', () => window.print());
