@@ -553,7 +553,6 @@
         <div class="controls">
           <select id="filter"><option value="all">全項目</option></select>
           <button id="resetBtn" type="button">リセット</button>
-          <button id="shareBtn" type="button">共有文を作成</button>
           <button id="posterBtn" class="primary" type="button">瓶一覧結果を表示</button>
           <button id="lineAppBtn" type="button">アプリURLをコピー</button>
           <button id="lineResultBtn" type="button">診断結果をコピー</button><span id="copyStatus" class="copy-status"></span>
@@ -573,8 +572,6 @@
         <h2 class="result-title">分析結果</h2>
         <div id="resultText">まだ瓶が選ばれていません。</div>
         <div id="categoryBars" class="bars"></div>
-        <h3 style="margin:20px 0 8px;font-size:1.18rem">共有用コピー結果</h3>
-        <textarea id="shareText" readonly>共有文を作成するとここに表示されます。</textarea>
       </section>
     </div>
 
@@ -1364,37 +1361,6 @@
         </div>`).join('');
     }
 
-    function shareText(){
-      const result = resultMarkup();
-      if(result.type === '未診断'){
-        document.getElementById('shareText').value = 'まだ診断結果がありません。';
-        return;
-      }
-      const topReds = result.picks.red.slice(0,6).map(x => x.item).join('、') || 'なし';
-      const topYellows = result.picks.yellow.slice(0,6).map(x => x.item).join('、') || 'なし';
-      const text = [
-        '性癖の瓶メーカー診断結果',
-        '',
-        'タイプ：' + result.type,
-        '気質：' + smLabel(),
-        '性別：' + genderLabel(),
-        '推定：' + smDepthLabel(result.info, result.picks),
-        '推定：' + smDepthLabel(result.info, result.picks),
-        '強め：' + result.top.cat + ' / ' + result.second.cat,
-        '赤い瓶：' + topReds,
-        '黄色い瓶：' + topYellows,
-        '相性の良いタイプ：' + partnerType(result.top, result.second, result.info),
-        '',
-        'ひとこと：' + profileOneLine(),
-        '',
-        '※成人同士の同意・安全・合法が前提の娯楽用診断'
-      ].join('\n');
-      const area = document.getElementById('shareText');
-      area.value = text;
-      area.focus();
-      area.select();
-    }
-
     function cleanAppUrl(){
       const url = new URL(location.href);
       url.hash = '';
@@ -1446,40 +1412,11 @@
         }
         if(status) status.textContent = 'コピーしました。LINEに貼り付けてください。';
       }catch(e){
-        const area = document.getElementById('shareText');
-        if(area){
-          area.value = text;
-          area.focus();
-          area.select();
-        }
-        if(status) status.textContent = '下の欄に表示しました。選択してコピーしてください。';
+        if(status) status.textContent = 'コピーできませんでした。表示された文章を手動でコピーしてください。';
+        window.prompt('コピーできない場合は、この文章を選択してコピーしてください。', text);
       }
     }
 
-
-
-    function setPosterScale(value){
-      posterScale = Math.max(0.25, Math.min(1.2, Number(value) || 1));
-      const slider = document.getElementById('posterScale');
-      const valueEl = document.getElementById('posterScaleValue');
-      const inner = document.getElementById('posterScaleInner');
-      const poster = document.getElementById('poster');
-      if(slider) slider.value = String(Math.round(posterScale * 100));
-      if(valueEl) valueEl.textContent = Math.round(posterScale * 100) + '%';
-      if(inner) inner.style.transform = `scale(${posterScale})`;
-      if(inner && poster){
-        inner.style.width = (poster.offsetWidth * posterScale) + 'px';
-        inner.style.height = (poster.offsetHeight * posterScale) + 'px';
-      }
-    }
-
-    function distanceBetweenTouches(touches){
-      const a = touches[0];
-      const b = touches[1];
-      const dx = a.clientX - b.clientX;
-      const dy = a.clientY - b.clientY;
-      return Math.sqrt(dx*dx + dy*dy);
-    }
 
     function renderPoster(){
       const result = resultMarkup();
@@ -1569,11 +1506,9 @@
     filterSelect.addEventListener('change', e => { filter = e.target.value; render(); });
     document.getElementById('resetBtn').addEventListener('click', () => {
       Object.keys(state).forEach(key => state[key] = 0);
-      document.getElementById('shareText').value = '共有文を作成するとここに表示されます。';
       render();
     });
-    document.getElementById('shareBtn').addEventListener('click', shareText);
-    document.getElementById('lineAppBtn').addEventListener('click', () => {
+document.getElementById('lineAppBtn').addEventListener('click', () => {
       copyTextForLine(`これ試してみて\n性癖の瓶メーカー\n${cleanAppUrl()}`);
     });
     document.getElementById('lineResultBtn').addEventListener('click', () => {
